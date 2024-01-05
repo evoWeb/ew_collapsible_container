@@ -1,0 +1,19 @@
+{
+	"name": "evoweb/ew-collapsible-container",
+	"type": "typo3-cms-extension",
+	"description": "Collapsible container",
+	"homepage": "https://www.evoweb.de",
+	"license": [
+		"GPL-2.0-or-later"
+	],
+	"autoload": {
+		"psr-4": {
+			"Evoweb\\EwCollapsibleContainer\\": "Classes/"
+		}
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "ew_collapsible_container"
+		}
+	}
+}
