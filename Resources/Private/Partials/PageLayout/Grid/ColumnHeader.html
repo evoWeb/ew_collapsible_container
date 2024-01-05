@@ -2,6 +2,7 @@
     <f:if condition="{column.active}">
         <f:then>
             <div class="btn-group t3-page-column-header-icons">
+                <f:if condition="{collapsable}">
                 <a href="#"
                    class="btn btn-sm btn-default btn-borderless t3js-toggle-container-column"
                    title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:expandcontent')}"
@@ -16,6 +17,7 @@
                    data-collapse-state="expanded">
                     <core:icon identifier="actions-view-list-collapse" />
                 </a>
+                </f:if>
                 <f:if condition="{allowEditContent} && {column.editUrl}">
                     <a href="{column.editUrl}" title="{column.editLinkTitle}" class="btn btn-sm btn-default btn-borderless"><core:icon identifier="actions-document-open" /></a>
                 </f:if>
@@ -47,6 +49,8 @@
         <div class="t3-page-ce-dropzone t3js-page-ce-dropzone-available"></div>
     </div>
 </f:if>
+<f:if condition="{collapsable}">
 <div class="t3-page-ce container-collapsed-column-marker">
     {f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:contentcollapsed')}
 </div>
+</f:if>
