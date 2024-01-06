@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="messages" date="2023-02-07T14:19:01Z">
+		<header/>
+		<body>
+			<trans-unit id="collapsecontent">
+				<source>Collapse content in column</source>
+				<target>Spalte zuklappen</target>
+			</trans-unit>
+			<trans-unit id="expandcontent">
+				<source>Expand content in column</source>
+				<target>Spalte ausklappen</target>
+			</trans-unit>
+			<trans-unit id="contentcollapsed">
+				<source>This column is collapsed!</source>
+				<target>Diese Spalte ist zugeklappt</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
