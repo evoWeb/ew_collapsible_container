@@ -10,9 +10,6 @@
  *
  * The TYPO3 project - inspiring people to share!
  */
-
-import PersistentStorage from '@typo3/backend/storage/persistent.js';
-
 class ContainerToggle {
   containerColumnToggle = '.t3js-toggle-container-column';
 
@@ -64,4 +61,11 @@ class ContainerToggle {
   }
 }
 
-export default new ContainerToggle;
+define(
+  [
+    'TYPO3/CMS/Backend/Storage/Persistent'
+  ],
+  function(PersistentStorage) {
+    return new ContainerToggle(PersistentStorage);
+  }
+);
