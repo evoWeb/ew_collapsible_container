@@ -23,15 +23,6 @@ class ContainerConfiguration extends BaseContainerConfiguration
      */
     protected $gridTemplate = 'EXT:ew_collapsible_container/Resources/Private/Templates/Container/Grid.html';
 
-    /**
-     * @var array
-     */
-    protected $gridPartialPaths = [
-        'EXT:backend/Resources/Private/Partials/',
-        'EXT:container/Resources/Private/Partials/',
-        'EXT:ew_collapsible_container/Resources/Private/Partials/',
-    ];
-
     public function __construct(
         string $cType,
         string $label,
@@ -39,6 +30,13 @@ class ContainerConfiguration extends BaseContainerConfiguration
         array $grid
     ) {
         parent::__construct($cType, $label, $description, $grid);
-        $this->addGridPartialPath('EXT:ew_collapsible_container/Resources/Private/Partials/');
+        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() < 12) {
+            $this->addGridPartialPath('EXT:ew_collapsible_container/Resources/Private/PartialsPre12/');
+            $this->setGridTemplate(
+                'EXT:ew_collapsible_container/Resources/Private/Templates/Container/GridPre12.html'
+            );
+        } else {
+            $this->addGridPartialPath('EXT:ew_collapsible_container/Resources/Private/Partials/');
+        }
     }
 }

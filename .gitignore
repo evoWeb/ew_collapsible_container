@@ -1,4 +1,4 @@
 .idea/
-public/
-vendor/
+/public/
+/vendor/
 composer.lock

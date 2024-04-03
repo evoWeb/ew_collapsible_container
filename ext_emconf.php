@@ -1,6 +1,6 @@
 <?php
 
-$EM_CONF['extender'] = [
+$EM_CONF['ew_collapsible_container'] = [
     'title' => 'Collapsible container',
     'description' => '',
     'category' => 'misc',

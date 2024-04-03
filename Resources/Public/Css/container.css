@@ -18,6 +18,10 @@
     display: inline-block;
 }
 
+.collapsed > .t3-page-ce-wrapper {
+    min-height: 0;
+}
+
 .collapsed > .t3-page-ce-wrapper * {
     display: none;
 }

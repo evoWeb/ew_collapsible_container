@@ -44,7 +44,7 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
             foreach ($cols as $col) {
                 $newContentElementAtTopTarget = $this->containerService->getNewContentElementAtTopTargetInColumn($container, $col['colPos']);
                 $allowNewContentElements = !$this->containerColumnConfigurationService->isMaxitemsReached($container, $col['colPos']);
-                $collapsed = $this->getColumnCollapsedState((int)$record['uid'], (int)$col['colPos']);
+                $collapsed = $this->getColumnCollapsedState((int)$record['uid'], (int)$col['colPos'], $col);
                 $columnObject = GeneralUtility::makeInstance(
                     ContainerGridColumn::class,
                     $context,
@@ -85,7 +85,7 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
         return $content . $rendered;
     }
 
-    protected function getColumnCollapsedState(int $recordUid, int $colPos): bool
+    protected function getColumnCollapsedState(int $recordUid, int $colPos, array $col): bool
     {
         $collapseId = $recordUid . ContainerGridColumn::CONTAINER_COL_POS_DELIMITER_V12 . $colPos;
         if (isset($this->getBackendUser()->uc['moduleData']['list']['containerExpanded'][$collapseId])) {
