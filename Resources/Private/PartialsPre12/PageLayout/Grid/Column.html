@@ -16,14 +16,14 @@
                 <div class="t3-page-column-header-icons">
                     <f:if condition="{collapsable}">
                         <a href="#"
-                           class="btn btn-sm btn-default btn-borderless t3js-toggle-container-column"
+                           class="btn btn-default btn-borderless t3js-toggle-container-column"
                            title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:expandcontent')}"
                            data-toggle-title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:collapsecontent')}"
                            data-collapse-state="collapsed">
                             <core:icon identifier="actions-view-list-expand" />
                         </a>
                         <a href="#"
-                           class="btn btn-sm btn-default btn-borderless t3js-toggle-container-column"
+                           class="btn btn-default btn-borderless t3js-toggle-container-column"
                            title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:collapsecontent')}"
                            data-toggle-title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:expandcontent')}"
                            data-collapse-state="expanded">
@@ -73,7 +73,10 @@
     </f:if>
     <f:if condition="{collapsable}">
         <div class="t3-page-ce container-collapsed-column-marker t3js-expand-column">
-            {f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:contentcollapsed')} <a href="#">[+]</a>
+            <button type="button" class="btn btn-default">
+                <core:icon identifier="actions-view-list-expand"/>
+            </button>
+            {f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:contentcollapsed')}
         </div>
     </f:if>
     <f:if condition="{column.unassigned}">
