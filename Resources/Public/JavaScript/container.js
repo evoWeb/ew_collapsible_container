@@ -16,6 +16,8 @@ import PersistentStorage from '@typo3/backend/storage/persistent.js';
 class ContainerToggle {
   containerColumnToggle = '.t3js-toggle-container-column';
 
+  columnExpand = '.t3js-expand-column';
+
   persistentStorage = null;
 
   storageKey = 'moduleData.list.containerExpanded';
@@ -23,6 +25,7 @@ class ContainerToggle {
   constructor(PersistentStorage) {
     this.persistentStorage = PersistentStorage;
     this.initializeContainerToggle();
+    this.initializeExpandColumn();
   }
 
   /**
@@ -35,32 +38,73 @@ class ContainerToggle {
     });
   }
 
+  initializeExpandColumn() {
+    const columnExpanders = Array.from(document.querySelectorAll(this.columnExpand));
+    columnExpanders.forEach(columnExpander=> {
+      columnExpander.addEventListener('click', event => this.expandClicked(event));
+    });
+  }
+
   toggleClicked(event) {
     event.preventDefault();
 
     let column = event.currentTarget,
-      container = column.closest('td').dataset['colpos'],
-      isExpanded = column.dataset['collapseState'] === 'expanded';
+      containerCell = column.closest('td'),
+      colPos = parseInt(containerCell.dataset['colpos']),
+      isExpanded = column.dataset['collapseState'] === 'expanded',
+      storedModuleDataList = this.getCurrentModuleDataList(colPos, isExpanded);
 
     // Store collapse state in UC
+    this.setStoredModuleDataList(storedModuleDataList).then(() => {
+      if (isExpanded) {
+        containerCell.classList.add('collapsed');
+      } else {
+        containerCell.classList.remove('collapsed');
+      }
+    });
+  }
+
+  expandClicked(event) {
+    event.preventDefault();
+
+    let expander = event.currentTarget,
+      containerCell = expander.closest('td'),
+      colPos = parseInt(containerCell.dataset['colpos']),
+      isExpanded = false,
+      storedModuleDataList = this.getCurrentModuleDataList(colPos, isExpanded);
+
+    // Store collapse state in UC
+    this.setStoredModuleDataList(storedModuleDataList).then(() => {
+      containerCell.classList.remove('collapsed');
+    });
+  }
+
+  /**
+   * @param {number} colPos
+   * @param {boolean} isExpanded
+   *
+   * @returns {object}
+   */
+  getCurrentModuleDataList(colPos, isExpanded) {
     let storedModuleDataList = {};
 
     if (this.persistentStorage.isset(this.storageKey)) {
       storedModuleDataList = this.persistentStorage.get(this.storageKey);
     }
 
-    let expandConfig = {};
-    expandConfig[container] = isExpanded ? '1' : '0';
+    let collapseConfig = {};
+    collapseConfig[colPos] = isExpanded ? '1' : '0';
 
-    storedModuleDataList = Object.assign(storedModuleDataList, expandConfig);
+    return Object.assign(storedModuleDataList, collapseConfig);
+  }
 
-    this.persistentStorage.set(this.storageKey, storedModuleDataList).then(() => {
-      if (isExpanded) {
-        column.closest('td').classList.add('collapsed');
-      } else {
-        column.closest('td').classList.remove('collapsed');
-      }
-    });
+  /**
+   * @param {object} moduleData
+   *
+   * @returns {Promise}
+   */
+  setStoredModuleDataList(moduleData) {
+    return this.persistentStorage.set(this.storageKey, moduleData);
   }
 }
 
