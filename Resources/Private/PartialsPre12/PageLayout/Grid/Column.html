@@ -51,15 +51,21 @@
     <f:if condition="{allowEditContent} && {column.contentEditable} && {column.allowNewContent}">
         <div class="t3-page-ce t3js-page-ce" data-page="{column.context.pageId}" id="{column.uniqueId}">
             <div class="t3js-page-new-ce t3-page-ce-wrapper-new-ce" id="colpos-{column.columnNumber}-page-{column.context.pageId}-{column.uniqueId}">
-                <f:if condition="{column.context.drawingConfiguration.showNewContentWizard}">
+                <f:if condition="{column.childAllowedTypesCount} == 1">
                     <f:then>
+                        <a href="{column.newContentUrl}" title="{newContentTitle}" class="btn btn-default btn-sm">
+                            <core:icon identifier="actions-add" />
+                            {newContentTitleShort}
+                        </a>
+                    </f:then>
+                    <f:else if="{column.context.drawingConfiguration.showNewContentWizard}">
                         <typo3-backend-new-content-element-wizard-button url="{column.newContentUrl}" title="{newContentTitle}">
                             <button type="button" class="btn btn-default btn-sm">
                                 <core:icon identifier="actions-add" />
                                 {newContentTitleShort}
                             </button>
                         </typo3-backend-new-content-element-wizard-button>
-                    </f:then>
+                    </f:else>
                     <f:else>
                         <a href="{column.newContentUrl}" title="{newContentTitle}" class="btn btn-default btn-sm">
                             <core:icon identifier="actions-add" />
