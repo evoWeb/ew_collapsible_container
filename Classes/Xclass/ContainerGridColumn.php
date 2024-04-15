@@ -44,6 +44,10 @@ class ContainerGridColumn extends BaseContainerGridColumn
 
     public function getChildAllowedTypesCount(): int
     {
+        if (!($this->definition['allowDirectNewLink'] ?? false)) {
+            return PHP_INT_MAX;
+        }
+
         $allowed = $this->definition['allowed'] ?? [];
         $cType = explode(',', $allowed['CType'] ?? '');
         $listType = explode(',', $allowed['list_type'] ?? '');
@@ -55,6 +59,10 @@ class ContainerGridColumn extends BaseContainerGridColumn
 
     public function getNewContentUrl(): string
     {
+        if (!($this->definition['allowDirectNewLink'] ?? false)) {
+            return parent::getNewContentUrl();
+        }
+
         $pageId = $this->context->getPageId();
 
         $urlParameters = [
