@@ -20,6 +20,10 @@ class ContainerGridColumnItem extends BaseContainerGridColumnItem
 {
     public function getNewContentAfterUrl(): string
     {
+        if (!($this->column->getDefinition()['allowDirectNewLink'] ?? false)) {
+            return parent::getNewContentAfterUrl();
+        }
+
         $urlParameters = [
             'edit' => [
                 'tt_content' => [
