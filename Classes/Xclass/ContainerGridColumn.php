@@ -96,6 +96,7 @@ class ContainerGridColumn extends BaseContainerGridColumn
             }
         }
 
+        /** @var UriBuilder $uriBuilder */
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         return (string)$uriBuilder->buildUriFromRoute($routeName, $urlParameters);
     }
