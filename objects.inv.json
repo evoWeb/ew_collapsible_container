@@ -1,0 +1,56 @@
+{
+    "std:doc": {
+        "Index": [
+            "-",
+            "-",
+            "Index.html",
+            "ew_collapsible_container: Container with collapsible columns"
+        ],
+        "Installation\/Index": [
+            "-",
+            "-",
+            "Installation\/Index.html",
+            "Installation"
+        ],
+        "Sitemap": [
+            "-",
+            "-",
+            "Sitemap.html",
+            "Sitemap"
+        ]
+    },
+    "std:label": {
+        "installation": [
+            "-",
+            "-",
+            "Installation\/Index.html#installation",
+            "Installation"
+        ]
+    },
+    "std:title": {
+        "ew-collapsible-container-container-with-collapsible-columns": [
+            "-",
+            "-",
+            "Index.html#ew-collapsible-container-container-with-collapsible-columns",
+            "ew_collapsible_container: Container with collapsible columns"
+        ],
+        "installation-1": [
+            "-",
+            "-",
+            "Installation\/Index.html#installation-1",
+            "Installation"
+        ],
+        "download-via-composer": [
+            "-",
+            "-",
+            "Installation\/Index.html#download-via-composer",
+            "Download via Composer"
+        ],
+        "sitemap": [
+            "-",
+            "-",
+            "Sitemap.html#sitemap",
+            "Sitemap"
+        ]
+    }
+}
