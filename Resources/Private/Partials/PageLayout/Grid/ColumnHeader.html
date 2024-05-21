@@ -23,6 +23,7 @@
                 </f:if>
             </div>
             {column.title}
+            <f:if condition="{column.items -> f:count()} > 0 && {column.items -> f:count()} < {column.minitems}"><span class="fw-bold link-danger"><f:translate id="LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:minimum-item-count-not-reached" arguments="{1: column.minitems}"/></span></f:if>
         </f:then>
         <f:else if="{column.unused}">
             <f:translate key="LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:unusedColPos"/>

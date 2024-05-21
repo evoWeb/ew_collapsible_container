@@ -58,7 +58,8 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
                     $container,
                     $newContentElementAtTopTarget,
                     $allowNewContentElements,
-                    $collapsed
+                    $collapsed,
+                    $col['minitems'] ?? 0
                 );
                 $rowObject->addColumn($columnObject);
                 if (isset($col['colPos'])) {
