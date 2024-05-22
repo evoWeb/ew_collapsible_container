@@ -15,6 +15,10 @@
 				<source>This column is collapsed!</source>
 				<target>Diese Spalte ist zugeklappt</target>
 			</trans-unit>
+			<trans-unit id="minimum-item-count-not-reached">
+				<source>The minimum amount of %1$d child elements is not reached!</source>
+				<target>Die mindest Anzahl von %1$d Kindelementen ist noch nicht erreicht!</target>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

@@ -6,7 +6,9 @@
         </f:render>
         <f:spaceless>
             <div class="t3-page-ce-body">
-                <f:render partial="PageLayout/RecordDefault/Preview" arguments="{_all}" />
+                <div class="t3-page-ce-body-inner">
+                    <f:render partial="PageLayout/RecordDefault/Preview" arguments="{_all}" />
+                </div>
             </div>
         </f:spaceless>
         <f:render partial="PageLayout/Record/{item.record.CType}/Footer" arguments="{_all}" optional="1">

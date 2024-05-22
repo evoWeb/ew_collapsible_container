@@ -8,10 +8,10 @@ $EM_CONF['ew_collapsible_container'] = [
     'author_email' => 'ew-collapsible-container@evoweb.de',
     'author_company' => 'evoWeb',
     'state' => 'stable',
-    'version' => '1.3.1',
+    'version' => '1.4.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '11.5.0-12.4.99',
+            'typo3' => '11.5.0-13.4.99',
         ],
     ],
 ];

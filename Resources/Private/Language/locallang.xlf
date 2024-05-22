@@ -12,6 +12,9 @@
 			<trans-unit id="contentcollapsed">
 				<source>This column is collapsed!</source>
 			</trans-unit>
+			<trans-unit id="minimum-item-count-not-reached">
+				<source>The minimum amount of %1$d children is not reached!</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

@@ -34,12 +34,12 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
         $grid = GeneralUtility::makeInstance(Grid::class, $context);
         try {
             $container = $this->containerFactory->buildContainer((int)$record['uid']);
-        } catch (Exception $e) {
+        } catch (Exception) {
             // not a container
             return $content;
         }
         $containerGrid = $this->tcaRegistry->getGrid($record['CType']);
-        foreach ($containerGrid as $row => $cols) {
+        foreach ($containerGrid as $cols) {
             $rowObject = GeneralUtility::makeInstance(GridRow::class, $context);
             foreach ($cols as $col) {
                 $newContentElementAtTopTarget = $this->containerService->getNewContentElementAtTopTargetInColumn($container, $col['colPos']);
@@ -52,7 +52,8 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
                     $container,
                     $newContentElementAtTopTarget,
                     $allowNewContentElements,
-                    $collapsed
+                    $collapsed,
+                    $col['minitems'] ?? 0
                 );
                 $rowObject->addColumn($columnObject);
                 if (isset($col['colPos'])) {

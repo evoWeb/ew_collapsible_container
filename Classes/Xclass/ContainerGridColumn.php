@@ -26,7 +26,8 @@ class ContainerGridColumn extends BaseContainerGridColumn
         Container $container,
         int $newContentElementAtTopTarget,
         bool $allowNewContentElements = true,
-        protected bool $collapsed = false
+        protected bool $collapsed = false,
+        protected int $minitems = 0
     ) {
         parent::__construct(
             $context,
@@ -96,7 +97,13 @@ class ContainerGridColumn extends BaseContainerGridColumn
             }
         }
 
+        /** @var UriBuilder $uriBuilder */
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         return (string)$uriBuilder->buildUriFromRoute($routeName, $urlParameters);
+    }
+
+    public function getMinitems(): int
+    {
+        return $this->minitems;
     }
 }
