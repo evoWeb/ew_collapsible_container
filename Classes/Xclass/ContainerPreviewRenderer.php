@@ -16,27 +16,21 @@ use B13\Container\Backend\Preview\ContainerPreviewRenderer as BaseContainerPrevi
 use B13\Container\Backend\Grid\ContainerGridColumn;
 use B13\Container\Backend\Grid\ContainerGridColumnItem;
 use B13\Container\Domain\Factory\Exception;
-use TYPO3\CMS\Backend\Preview\StandardPreviewRendererResolver;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridRow;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 
 class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
 {
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
+        $content = StandardContentPreviewRenderer::renderPageModulePreviewContent($item);
         $context = $item->getContext();
         $record = $item->getRecord();
-        $previewRenderer = GeneralUtility::makeInstance(StandardPreviewRendererResolver::class)
-            ->resolveRendererFor(
-                'tt_content',
-                $record,
-                $context->getPageId()
-            );
-        $content = $previewRenderer->renderPageModulePreviewContent($item);
         $grid = GeneralUtility::makeInstance(Grid::class, $context);
         try {
             $container = $this->containerFactory->buildContainer((int)$record['uid']);
