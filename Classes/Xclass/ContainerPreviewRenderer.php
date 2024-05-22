@@ -29,6 +29,7 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
         $content = StandardContentPreviewRenderer::renderPageModulePreviewContent($item);
+        // @extensionScannerIgnoreLine
         $context = $item->getContext();
         $record = $item->getRecord();
         $grid = GeneralUtility::makeInstance(Grid::class, $context);

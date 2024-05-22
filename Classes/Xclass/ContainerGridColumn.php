@@ -75,6 +75,7 @@ class ContainerGridColumn extends BaseContainerGridColumn
             'defVals' => [
                 'tt_content' => [
                     'colPos' => $this->getColumnNumber(),
+                    // @extensionScannerIgnoreLine
                     'sys_language_uid' => $this->container->getLanguage(),
                     'tx_container_parent' => $this->container->getUidOfLiveWorkspace(),
                     'uid_pid' => $this->newContentElementAtTopTarget,

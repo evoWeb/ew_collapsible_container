@@ -33,6 +33,7 @@ class ContainerGridColumnItem extends BaseContainerGridColumnItem
             'defVals' => [
                 'tt_content' => [
                     'colPos' => $this->column->getColumnNumber(),
+                    // @extensionScannerIgnoreLine
                     'sys_language_uid' => $this->container->getLanguage(),
                     'tx_container_parent' => $this->container->getUidOfLiveWorkspace(),
                     'uid_pid' => -$this->record['uid'],
