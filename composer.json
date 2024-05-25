@@ -3,20 +3,33 @@
 	"type": "typo3-cms-extension",
 	"description": "Collapsible container",
 	"homepage": "https://www.evoweb.de",
+	"config": {
+		"bin-dir": "bin",
+		"allow-plugins": {
+			"typo3/class-alias-loader": true,
+			"typo3/cms-composer-installers": true
+		}
+	},
 	"license": [
 		"GPL-2.0-or-later"
 	],
 	"require": {
-		"typo3/cms-backend": "^11.5 || ^12.4 || ^13.0"
+		"typo3/cms-backend": "^11.5 || ^12.4 || ^13.0",
+		"typo3/cms-core": "dev-main"
+	},
+	"require-dev": {
+		"friendsofphp/php-cs-fixer": "^3.57.1"
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "ew_collapsible_container"
+		}
 	},
 	"autoload": {
 		"psr-4": {
 			"Evoweb\\EwCollapsibleContainer\\": "Classes/"
-		}
-	},
-	"extra": {
-		"typo3/cms": {
-			"extension-key": "ew_collapsible_container"
 		}
 	}
 }
