@@ -21,8 +21,10 @@ class ContainerToggle {
 
   constructor(PersistentStorage) {
     this.persistentStorage = PersistentStorage;
-    this.initializeContainerToggle();
-    this.initializeExpandColumn();
+    document.addEventListener('DOMContentLoaded', () => {
+      this.initializeContainerToggle();
+      this.initializeExpandColumn();
+    });
   }
 
   /**

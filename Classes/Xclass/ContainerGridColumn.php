@@ -30,7 +30,7 @@ class ContainerGridColumn extends BaseContainerGridColumn
         int $newContentElementAtTopTarget,
         bool $allowNewContentElements = true,
         protected bool $collapsed = false,
-        protected int $minitems = 0
+        protected int $minItems = 0
     ) {
         parent::__construct(
             $context,
@@ -106,8 +106,24 @@ class ContainerGridColumn extends BaseContainerGridColumn
         return (string)$uriBuilder->buildUriFromRoute($routeName, $urlParameters);
     }
 
-    public function getMinitems(): int
+    public function hasShowMinItemsWarning(): bool
     {
-        return $this->minitems;
+        return count($this->items) > 0
+            && (count($this->items) - $this->getHiddenItemCount()) < $this->minItems;
+    }
+
+    public function getMinItems(): int
+    {
+        return $this->minItems;
+    }
+
+    public function getHiddenItemCount(): int
+    {
+        return count(
+            array_filter(
+                $this->items,
+                fn (ContainerGridColumnItem $item) => $item->isHidden()
+            )
+        );
     }
 }

@@ -19,6 +19,10 @@
 				<source>The minimum amount of %1$d child elements is not reached!</source>
 				<target>Die mindest Anzahl von %1$d Kindelementen ist noch nicht erreicht!</target>
 			</trans-unit>
+			<trans-unit id="minimum-item-count-not-reached-with-hidden">
+				<source>The minimum amount of %1$d visible children is not reached! %2$s children are hidden.</source>
+				<target>Die mindest Anzahl von %1$d sichtbaren Kindelementen ist noch nicht erreicht! %2$s Kindelement sind versteckt.</target>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

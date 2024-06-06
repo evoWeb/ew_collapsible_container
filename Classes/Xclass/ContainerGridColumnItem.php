@@ -63,4 +63,9 @@ class ContainerGridColumnItem extends BaseContainerGridColumnItem
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         return (string)$uriBuilder->buildUriFromRoute($routeName, $urlParameters);
     }
+
+    public function isHidden(): bool
+    {
+        return ($this->record['hidden'] ?? 0) > 0;
+    }
 }
