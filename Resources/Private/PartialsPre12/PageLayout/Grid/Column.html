@@ -35,7 +35,16 @@
                     </f:if>
                 </div>
                 {column.title}
-                <f:if condition="{column.items -> f:count()} > 0 && {column.items -> f:count()} < {column.minitems}"><span class="fw-bold link-danger"><f:translate id="LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:minimum-item-count-not-reached" arguments="{1: column.minitems}"/></span></f:if>
+                <f:if condition="{column.showMinItemsWarning}"><span class="fw-bold link-danger">
+                    <f:if condition="{column.hiddenItemCount}">
+                        <f:then>
+                            <f:translate id="LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:minimum-item-count-not-reached-with-hidden" arguments="{1: column.minitems, 2: column.hiddenItemCount}"/>
+                        </f:then>
+                        <f:else>
+                            <f:translate id="LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:minimum-item-count-not-reached" arguments="{1: column.minitems}"/>
+                        </f:else>
+                    </f:if>
+                </span></f:if>
             </f:then>
             <f:else if="{column.unassigned}">
                 {column.title} (<f:format.raw>{column.titleUnassigned}</f:format.raw>)

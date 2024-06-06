@@ -2,15 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Evoweb\EwCollapsibleContainer\Xclass;
-
 /*
- * This file is part of TYPO3 CMS-based extension "ew_collapsible_container" by evoweb.
+ * This file is developed by evoWeb.
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
  * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  */
+
+namespace Evoweb\EwCollapsibleContainer\Xclass;
 
 use B13\Container\Backend\Grid\ContainerGridColumn as BaseContainerGridColumn;
 use B13\Container\Domain\Model\Container;
@@ -27,7 +30,7 @@ class ContainerGridColumn extends BaseContainerGridColumn
         int $newContentElementAtTopTarget,
         bool $allowNewContentElements = true,
         protected bool $collapsed = false,
-        protected int $minitems = 0
+        protected int $minItems = 0
     ) {
         parent::__construct(
             $context,
@@ -75,6 +78,7 @@ class ContainerGridColumn extends BaseContainerGridColumn
             'defVals' => [
                 'tt_content' => [
                     'colPos' => $this->getColumnNumber(),
+                    // @extensionScannerIgnoreLine
                     'sys_language_uid' => $this->container->getLanguage(),
                     'tx_container_parent' => $this->container->getUidOfLiveWorkspace(),
                     'uid_pid' => $this->newContentElementAtTopTarget,
@@ -102,8 +106,24 @@ class ContainerGridColumn extends BaseContainerGridColumn
         return (string)$uriBuilder->buildUriFromRoute($routeName, $urlParameters);
     }
 
-    public function getMinitems(): int
+    public function hasShowMinItemsWarning(): bool
     {
-        return $this->minitems;
+        return count($this->items) > 0
+            && (count($this->items) - $this->getHiddenItemCount()) < $this->minItems;
+    }
+
+    public function getMinItems(): int
+    {
+        return $this->minItems;
+    }
+
+    public function getHiddenItemCount(): int
+    {
+        return count(
+            array_filter(
+                $this->items,
+                fn (ContainerGridColumnItem $item) => $item->isHidden()
+            )
+        );
     }
 }

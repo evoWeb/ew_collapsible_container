@@ -2,33 +2,37 @@
 
 declare(strict_types=1);
 
-namespace Evoweb\EwCollapsibleContainer\Xclass;
-
 /*
- * This file is part of TYPO3 CMS-based extension "ew_collapsible_container" by evoweb.
+ * This file is developed by evoWeb.
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
  * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  */
 
-use B13\Container\Backend\Preview\ContainerPreviewRenderer as BaseContainerPreviewRenderer;
+namespace Evoweb\EwCollapsibleContainer\Xclass;
+
 use B13\Container\Backend\Grid\ContainerGridColumn;
 use B13\Container\Backend\Grid\ContainerGridColumnItem;
+use B13\Container\Backend\Preview\ContainerPreviewRenderer as BaseContainerPreviewRenderer;
 use B13\Container\Domain\Factory\Exception;
+use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridRow;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
-use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 
 class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
 {
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
         $content = StandardContentPreviewRenderer::renderPageModulePreviewContent($item);
+        // @extensionScannerIgnoreLine
         $context = $item->getContext();
         $record = $item->getRecord();
         $grid = GeneralUtility::makeInstance(Grid::class, $context);
@@ -42,8 +46,14 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
         foreach ($containerGrid as $cols) {
             $rowObject = GeneralUtility::makeInstance(GridRow::class, $context);
             foreach ($cols as $col) {
-                $newContentElementAtTopTarget = $this->containerService->getNewContentElementAtTopTargetInColumn($container, $col['colPos']);
-                $allowNewContentElements = !$this->containerColumnConfigurationService->isMaxitemsReached($container, $col['colPos']);
+                $newContentElementAtTopTarget = $this->containerService->getNewContentElementAtTopTargetInColumn(
+                    $container,
+                    $col['colPos']
+                );
+                $allowNewContentElements = !$this->containerColumnConfigurationService->isMaxitemsReached(
+                    $container,
+                    $col['colPos']
+                );
                 $collapsed = $this->getColumnCollapsedState((int)$record['uid'], (int)$col['colPos'], $col);
                 $columnObject = GeneralUtility::makeInstance(
                     ContainerGridColumn::class,
@@ -59,7 +69,13 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
                 if (isset($col['colPos'])) {
                     $records = $container->getChildrenByColPos($col['colPos']);
                     foreach ($records as $contentRecord) {
-                        $columnItem = GeneralUtility::makeInstance(ContainerGridColumnItem::class, $context, $columnObject, $contentRecord, $container);
+                        $columnItem = GeneralUtility::makeInstance(
+                            ContainerGridColumnItem::class,
+                            $context,
+                            $columnObject,
+                            $contentRecord,
+                            $container
+                        );
                         $columnObject->addItem($columnItem);
                     }
                 }
@@ -75,9 +91,24 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
         $view->setLayoutRootPaths($layoutRootPaths);
         $view->setTemplatePathAndFilename($gridTemplate);
 
-        $view->assign('hideRestrictedColumns', (bool)(BackendUtility::getPagesTSconfig($context->getPageId())['mod.']['web_layout.']['hideRestrictedCols'] ?? false));
-        $view->assign('newContentTitle', $this->getLanguageService()->sL('LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:newContentElement'));
-        $view->assign('newContentTitleShort', $this->getLanguageService()->sL('LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:content'));
+        $view->assign(
+            'hideRestrictedColumns',
+            (bool)(
+                BackendUtility::getPagesTSconfig(
+                    $context->getPageId()
+                )['mod.']['web_layout.']['hideRestrictedCols'] ?? false
+            )
+        );
+        $view->assign(
+            'newContentTitle',
+            $this->getLanguageService()->sL(
+                'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:newContentElement'
+            )
+        );
+        $view->assign(
+            'newContentTitleShort',
+            $this->getLanguageService()->sL('LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:content')
+        );
         $view->assign('allowEditContent', $this->getBackendUser()->check('tables_modify', 'tt_content'));
         $view->assign('containerGrid', $grid);
         $view->assign('containerRecord', $record);
@@ -89,7 +120,7 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
     protected function getColumnCollapsedState(int $recordUid, int $colPos, array $col): bool
     {
         $collapseId = $recordUid . ContainerGridColumn::CONTAINER_COL_POS_DELIMITER_V12 . $colPos;
-        if (isset($this->getBackendUser()->uc['moduleData']['list']['containerExpanded'][$collapseId])) {
+        if ($this->getBackendUser()->uc['moduleData']['list']['containerExpanded'][$collapseId] ?? false) {
             $collapsed = $this->getBackendUser()->uc['moduleData']['list']['containerExpanded'][$collapseId] > 0;
         } else {
             $collapsed = (bool)($col['collapsed'] ?? false);

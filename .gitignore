@@ -1,4 +1,11 @@
+.cache/
 .idea/
-/public/
-/vendor/
+Build/
+bin/
+Documentation-GENERATED-temp/
+typo3temp/
+var/
+public/
+vendor/
 composer.lock
+.php-cs-fixer.cache

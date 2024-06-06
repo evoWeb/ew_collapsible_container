@@ -2,15 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Evoweb\EwCollapsibleContainer\Xclass;
-
 /*
- * This file is part of TYPO3 CMS-based extension "container" by b13.
+ * This file is developed by evoWeb.
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
  * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
  */
+
+namespace Evoweb\EwCollapsibleContainer\Xclass;
 
 use B13\Container\Backend\Grid\ContainerGridColumnItem as BaseContainerGridColumnItem;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -33,6 +36,7 @@ class ContainerGridColumnItem extends BaseContainerGridColumnItem
             'defVals' => [
                 'tt_content' => [
                     'colPos' => $this->column->getColumnNumber(),
+                    // @extensionScannerIgnoreLine
                     'sys_language_uid' => $this->container->getLanguage(),
                     'tx_container_parent' => $this->container->getUidOfLiveWorkspace(),
                     'uid_pid' => -$this->record['uid'],
@@ -58,5 +62,10 @@ class ContainerGridColumnItem extends BaseContainerGridColumnItem
         /** @var UriBuilder $uriBuilder */
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         return (string)$uriBuilder->buildUriFromRoute($routeName, $urlParameters);
+    }
+
+    public function isHidden(): bool
+    {
+        return ($this->record['hidden'] ?? 0) > 0;
     }
 }
