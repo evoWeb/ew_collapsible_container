@@ -19,7 +19,7 @@
         </f:render>
     </div>
     <f:if condition="{allowEditContent} && {item.column.contentEditable} && {item.column.allowNewContent} && {column.active}">
-        <div class="t3-page-ce-actions t3js-page-new-ce" id="colpos-{item.column.columnNumber}-page-{item.context.pageId}-{item.column.uniqueId}">
+        <div class="t3-page-ce-actions t3js-page-new-ce t3-page-ce-wrapper-new-ce" id="colpos-{item.column.columnNumber}-page-{item.context.pageId}-{item.column.uniqueId}">
             <f:if condition="{item.column.childAllowedTypesCount} == 1">
                 <f:then>
                     <a href="{item.newContentAfterUrl}" title="{newContentTitle}" class="btn btn-default btn-sm">
@@ -38,6 +38,6 @@
             </f:if>
         </div>
     </f:if>
-    <div class="t3-page-ce-dropzone t3js-page-ce-dropzone-available"></div>
+    <div class="t3-page-ce-dropzone-available t3js-page-ce-dropzone-available"></div>
 </div>
 </html>
