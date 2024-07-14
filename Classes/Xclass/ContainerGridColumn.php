@@ -17,6 +17,7 @@ namespace Evoweb\EwCollapsibleContainer\Xclass;
 
 use B13\Container\Backend\Grid\ContainerGridColumn as BaseContainerGridColumn;
 use B13\Container\Domain\Model\Container;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\View\PageLayoutContext;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -84,7 +85,8 @@ class ContainerGridColumn extends BaseContainerGridColumn
                     'uid_pid' => $this->newContentElementAtTopTarget,
                 ],
             ],
-            'returnUrl' => $GLOBALS['TYPO3_REQUEST']->getAttribute('normalizedParams')->getRequestUri(),
+            // @extensionScannerIgnoreLine
+            'returnUrl' => $this->getRequest()->getAttribute('normalizedParams')->getRequestUri(),
         ];
         $routeName = 'record_edit';
 
@@ -125,5 +127,10 @@ class ContainerGridColumn extends BaseContainerGridColumn
                 fn (ContainerGridColumnItem $item) => $item->isHidden()
             )
         );
+    }
+
+    protected function getRequest(): ServerRequestInterface
+    {
+        return $GLOBALS['TYPO3_REQUEST'];
     }
 }
