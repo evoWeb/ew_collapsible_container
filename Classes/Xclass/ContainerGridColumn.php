@@ -47,6 +47,11 @@ class ContainerGridColumn extends BaseContainerGridColumn
         return $this->collapsed;
     }
 
+    public function setCollapsed(bool $collapsed): void
+    {
+        $this->collapsed = $collapsed;
+    }
+
     public function getChildAllowedTypesCount(): int
     {
         if (!($this->definition['allowDirectNewLink'] ?? false)) {
@@ -111,7 +116,7 @@ class ContainerGridColumn extends BaseContainerGridColumn
     public function hasShowMinItemsWarning(): bool
     {
         return count($this->items) > 0
-            && (count($this->items) - $this->getHiddenItemCount()) < $this->minItems;
+            && (count($this->items) - $this->getHiddenItemCount()) < $this->getMinItems();
     }
 
     public function getMinItems(): int
@@ -124,7 +129,7 @@ class ContainerGridColumn extends BaseContainerGridColumn
         return count(
             array_filter(
                 $this->items,
-                fn (ContainerGridColumnItem $item) => $item->isHidden()
+                fn (ContainerGridColumnItem $item) => ($item->getRecord()['hidden'] ?? 0) > 0
             )
         );
     }

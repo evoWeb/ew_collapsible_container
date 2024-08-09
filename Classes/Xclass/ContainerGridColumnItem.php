@@ -66,11 +66,6 @@ class ContainerGridColumnItem extends BaseContainerGridColumnItem
         return (string)$uriBuilder->buildUriFromRoute($routeName, $urlParameters);
     }
 
-    public function isHidden(): bool
-    {
-        return ($this->record['hidden'] ?? 0) > 0;
-    }
-
     protected function getRequest(): ServerRequestInterface
     {
         return $GLOBALS['TYPO3_REQUEST'];
