@@ -22,7 +22,7 @@ class ContainerToggle {
 
   storageKey = 'moduleData.list.containerExpanded';
 
-  constructor(PersistentStorage) {
+  constructor() {
     this.persistentStorage = PersistentStorage;
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
@@ -58,9 +58,9 @@ class ContainerToggle {
   toggleClicked(event) {
     event.preventDefault();
 
-    let column = event.currentTarget,
+    const column = event.currentTarget,
       containerCell = column.closest('td'),
-      colPos = parseInt(containerCell.dataset['colpos']),
+      colPos = this.getColPos(column),
       isExpanded = column.dataset['collapseState'] === 'expanded',
       storedModuleDataList = this.getCurrentModuleDataList(colPos, isExpanded);
 
@@ -77,9 +77,9 @@ class ContainerToggle {
   expandClicked(event) {
     event.preventDefault();
 
-    let expander = event.currentTarget,
+    const expander = event.currentTarget,
       containerCell = expander.closest('td'),
-      colPos = parseInt(containerCell.dataset['colpos']),
+      colPos = this.getColPos(expander),
       isExpanded = false,
       storedModuleDataList = this.getCurrentModuleDataList(colPos, isExpanded);
 
@@ -89,8 +89,15 @@ class ContainerToggle {
     });
   }
 
+  getColPos(column) {
+    const columnContainer = column.closest('[data-colpos]'),
+      containerId = parseInt(columnContainer.dataset.txContainerParent),
+      columnId = parseInt(columnContainer.dataset.colpos);
+    return containerId + '-' + columnId;
+  }
+
   /**
-   * @param {number} colPos
+   * @param {string} colPos
    * @param {boolean} isExpanded
    *
    * @returns {object}

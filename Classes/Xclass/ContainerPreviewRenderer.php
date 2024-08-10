@@ -120,7 +120,7 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
 
     protected function setColumnCollapsedState(int $recordUid, BaseContainerGridColumn $columnObject, array $col): void
     {
-        $collapseId = $recordUid . $columnObject->getColumnNumber();
+        $collapseId = $recordUid . ContainerGridColumn::CONTAINER_COL_POS_DELIMITER . $columnObject->getColumnNumber();
         if (isset($this->getBackendUser()->uc['moduleData']['list']['containerExpanded'][$collapseId])) {
             $collapsed = $this->getBackendUser()->uc['moduleData']['list']['containerExpanded'][$collapseId] > 0;
         } else {
