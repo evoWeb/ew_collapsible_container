@@ -16,16 +16,9 @@ declare(strict_types=1);
 namespace Evoweb\EwCollapsibleContainer\Xclass;
 
 use B13\Container\Tca\ContainerConfiguration as BaseContainerConfiguration;
-use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ContainerConfiguration extends BaseContainerConfiguration
 {
-    /**
-     * @var string
-     */
-    protected $gridTemplate = 'EXT:ew_collapsible_container/Resources/Private/Templates/Container/Grid.html';
-
     public function __construct(
         string $cType,
         string $label,
@@ -33,13 +26,7 @@ class ContainerConfiguration extends BaseContainerConfiguration
         array $grid
     ) {
         parent::__construct($cType, $label, $description, $grid);
-        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() < 12) {
-            $this->addGridPartialPath('EXT:ew_collapsible_container/Resources/Private/PartialsPre12/');
-            $this->setGridTemplate(
-                'EXT:ew_collapsible_container/Resources/Private/Templates/Container/GridPre12.html'
-            );
-        } else {
-            $this->addGridPartialPath('EXT:ew_collapsible_container/Resources/Private/Partials/');
-        }
+        $this->setGridTemplate('EXT:ew_collapsible_container/Resources/Private/Templates/Container/Grid.html');
+        $this->addGridPartialPath('EXT:ew_collapsible_container/Resources/Private/Partials/');
     }
 }

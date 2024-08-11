@@ -19,6 +19,7 @@ use B13\Container\Backend\Grid\ContainerGridColumn;
 use B13\Container\Backend\Grid\ContainerGridColumnItem;
 use B13\Container\Backend\Preview\ContainerPreviewRenderer as BaseContainerPreviewRenderer;
 use B13\Container\Domain\Factory\Exception;
+use Evoweb\EwCollapsibleContainer\Xclass\ContainerGridColumn as BaseContainerGridColumn;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
@@ -54,7 +55,6 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
                     $container,
                     $col['colPos']
                 );
-                $collapsed = $this->getColumnCollapsedState((int)$record['uid'], (int)$col['colPos'], $col);
                 $columnObject = GeneralUtility::makeInstance(
                     ContainerGridColumn::class,
                     $context,
@@ -62,9 +62,10 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
                     $container,
                     $newContentElementAtTopTarget,
                     $allowNewContentElements,
-                    $collapsed,
+                    false,
                     $col['minitems'] ?? 0
                 );
+                $this->setColumnCollapsedState((int)$record['uid'], $columnObject, $col);
                 $rowObject->addColumn($columnObject);
                 if (isset($col['colPos'])) {
                     $records = $container->getChildrenByColPos($col['colPos']);
@@ -117,14 +118,14 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
         return $content . $rendered;
     }
 
-    protected function getColumnCollapsedState(int $recordUid, int $colPos, array $col): bool
+    protected function setColumnCollapsedState(int $recordUid, BaseContainerGridColumn $columnObject, array $col): void
     {
-        $collapseId = $recordUid . ContainerGridColumn::CONTAINER_COL_POS_DELIMITER_V12 . $colPos;
+        $collapseId = $recordUid . ContainerGridColumn::CONTAINER_COL_POS_DELIMITER . $columnObject->getColumnNumber();
         if (isset($this->getBackendUser()->uc['moduleData']['list']['containerExpanded'][$collapseId])) {
             $collapsed = $this->getBackendUser()->uc['moduleData']['list']['containerExpanded'][$collapseId] > 0;
         } else {
             $collapsed = (bool)($col['collapsed'] ?? false);
         }
-        return $collapsed;
+        $columnObject->setCollapsed($collapsed);
     }
 }

@@ -17,6 +17,7 @@ namespace Evoweb\EwCollapsibleContainer\Xclass;
 
 use B13\Container\Backend\Grid\ContainerGridColumn as BaseContainerGridColumn;
 use B13\Container\Domain\Model\Container;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\View\PageLayoutContext;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -44,6 +45,11 @@ class ContainerGridColumn extends BaseContainerGridColumn
     public function getCollapsed(): bool
     {
         return $this->collapsed;
+    }
+
+    public function setCollapsed(bool $collapsed): void
+    {
+        $this->collapsed = $collapsed;
     }
 
     public function getChildAllowedTypesCount(): int
@@ -84,7 +90,8 @@ class ContainerGridColumn extends BaseContainerGridColumn
                     'uid_pid' => $this->newContentElementAtTopTarget,
                 ],
             ],
-            'returnUrl' => $GLOBALS['TYPO3_REQUEST']->getAttribute('normalizedParams')->getRequestUri(),
+            // @extensionScannerIgnoreLine
+            'returnUrl' => $this->getRequest()->getAttribute('normalizedParams')->getRequestUri(),
         ];
         $routeName = 'record_edit';
 
@@ -109,7 +116,7 @@ class ContainerGridColumn extends BaseContainerGridColumn
     public function hasShowMinItemsWarning(): bool
     {
         return count($this->items) > 0
-            && (count($this->items) - $this->getHiddenItemCount()) < $this->minItems;
+            && (count($this->items) - $this->getHiddenItemCount()) < $this->getMinItems();
     }
 
     public function getMinItems(): int
@@ -122,8 +129,13 @@ class ContainerGridColumn extends BaseContainerGridColumn
         return count(
             array_filter(
                 $this->items,
-                fn (ContainerGridColumnItem $item) => $item->isHidden()
+                fn (ContainerGridColumnItem $item) => ($item->getRecord()['hidden'] ?? 0) > 0
             )
         );
+    }
+
+    protected function getRequest(): ServerRequestInterface
+    {
+        return $GLOBALS['TYPO3_REQUEST'];
     }
 }
