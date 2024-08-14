@@ -42,15 +42,13 @@ class ContainerToggle {
    * initialize the toggle icons to open listings of nested grid container structure in the list module
    */
   initializeContainerToggle() {
-    const containers = Array.from(document.querySelectorAll(this.containerColumnToggle));
-    containers.forEach(container=> {
+    [...document.querySelectorAll(this.containerColumnToggle)].forEach(container => {
       container.addEventListener('click', event => this.toggleClicked(event));
     });
   }
 
   initializeExpandColumn() {
-    const columnExpanders = Array.from(document.querySelectorAll(this.columnExpand));
-    columnExpanders.forEach(columnExpander=> {
+    [...document.querySelectorAll(this.columnExpand)].forEach(columnExpander => {
       columnExpander.addEventListener('click', event => this.expandClicked(event));
     });
   }
