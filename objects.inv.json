@@ -1,54 +1,60 @@
 {
     "std:doc": {
         "Index": [
-            "-",
-            "-",
+            "Collapsible container",
+            "1.4.4",
             "Index.html",
-            "ew_collapsible_container: Container with collapsible columns"
+            "Container with collapsible columns"
         ],
         "Installation\/Index": [
-            "-",
-            "-",
+            "Collapsible container",
+            "1.4.4",
             "Installation\/Index.html",
             "Installation"
         ],
         "Sitemap": [
-            "-",
-            "-",
+            "Collapsible container",
+            "1.4.4",
             "Sitemap.html",
             "Sitemap"
         ]
     },
     "std:label": {
+        "start": [
+            "Collapsible container",
+            "1.4.4",
+            "Index.html#start",
+            "Container with collapsible columns"
+        ],
         "installation": [
-            "-",
-            "-",
+            "Collapsible container",
+            "1.4.4",
             "Installation\/Index.html#installation",
             "Installation"
         ]
     },
     "std:title": {
-        "ew-collapsible-container-container-with-collapsible-columns": [
-            "-",
-            "-",
-            "Index.html#ew-collapsible-container-container-with-collapsible-columns",
-            "ew_collapsible_container: Container with collapsible columns"
+        "container-with-collapsible-columns": [
+            "Collapsible container",
+            "1.4.4",
+            "Index.html#container-with-collapsible-columns",
+            "Container with collapsible columns"
         ],
         "installation-1": [
-            "-",
-            "-",
+            "Collapsible container",
+            "1.4.4",
             "Installation\/Index.html#installation-1",
             "Installation"
         ],
-        "download-via-composer": [
-            "-",
-            "-",
-            "Installation\/Index.html#download-via-composer",
-            "Download via Composer"
+        "installation-via-composer": [
+            "Collapsible container",
+            "1.4.4",
+            "Installation\/Index.html#installation-via-composer",
+            "Installation via Composer"
         ],
         "sitemap": [
-            "-",
-            "-",
+            "Collapsible container",
+            "1.4.4",
             "Sitemap.html#sitemap",
             "Sitemap"
         ]
