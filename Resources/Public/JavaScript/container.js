@@ -22,7 +22,7 @@ class ContainerToggle {
 
   storageKey = 'moduleData.list.containerExpanded';
 
-  constructor(PersistentStorage) {
+  constructor() {
     this.persistentStorage = PersistentStorage;
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
