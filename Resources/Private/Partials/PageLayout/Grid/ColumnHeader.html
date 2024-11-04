@@ -1,29 +1,32 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
       xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
       data-namespace-typo3-fluid="true">
-<f:variable name="columnIdentifier" value="columnIdentifier_column-{column.columnNumber}"/>
+
 <div class="t3-page-column-header">
     <f:if condition="{column.active}">
         <f:then>
             <div class="t3-page-column-header-icons">
                 <f:if condition="{collapsable}">
-                <a href="#"
-                   class="btn btn-sm btn-default btn-borderless t3js-toggle-container-column"
-                   title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:expandcontent')}"
-                   data-toggle-title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:collapsecontent')}"
-                   data-collapse-state="collapsed">
-                    <core:icon identifier="actions-view-list-expand" />
-                </a>
-                <a href="#"
-                   class="btn btn-sm btn-default btn-borderless t3js-toggle-container-column"
-                   title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:collapsecontent')}"
-                   data-toggle-title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:expandcontent')}"
-                   data-collapse-state="expanded">
-                    <core:icon identifier="actions-view-list-collapse" />
-                </a>
+                    <a href="#"
+                       class="btn btn-sm btn-default btn-borderless t3js-toggle-container-column"
+                       title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:expandcontent')}"
+                       data-toggle-title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:collapsecontent')}"
+                       data-collapse-state="collapsed">
+                        <core:icon identifier="actions-view-list-expand" />
+                    </a>
+                    <a href="#"
+                       class="btn btn-sm btn-default btn-borderless t3js-toggle-container-column"
+                       title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:collapsecontent')}"
+                       data-toggle-title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:expandcontent')}"
+                       data-collapse-state="expanded">
+                        <core:icon identifier="actions-view-list-collapse" />
+                    </a>
                 </f:if>
-                <f:if condition="{allowEditContent} && {column.contentEditable} && {column.allowNewContent}">
-                    <a href="{column.editUrl}" title="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:editColumn')}">
+
+                <f:if condition="{allowEditContent} && {column.editUrl}">
+                    <a href="{column.editUrl}"
+                       class="btn btn-sm btn-default btn-borderless"
+                       title="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:editColumn')}">
                         <core:icon identifier="actions-document-open" />
                     </a>
                 </f:if>
@@ -52,35 +55,20 @@
     </f:if>
 </div>
 <f:format.raw>{column.beforeSectionMarkup}</f:format.raw>
-<f:if condition="{allowEditContent} && {column.contentEditable} && {column.allowNewContent} && {column.active}">
-    <div class="t3-page-ce t3js-page-ce" data-page="{column.context.pageId}">
-        <div class="t3-page-ce-actions t3js-page-new-ce">
-            <f:if condition="{column.childAllowedTypesCount} == 1">
-                <f:then>
-                    <a href="{column.newContentUrl}" title="{newContentTitle}" class="btn btn-default btn-sm">
-                        <core:icon identifier="actions-add" />
-                        <f:translate key="LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:createNewContent" />
-                    </a>
-                </f:then>
-                <f:else>
-                    <typo3-backend-new-content-element-wizard-button url="{column.newContentUrl}" title="{newContentTitle}">
-                        <button type="button" class="btn btn-default btn-sm">
-                            <core:icon identifier="actions-add" />
-                            <f:translate key="LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:createNewContent" />
-                        </button>
-                    </typo3-backend-new-content-element-wizard-button>
-                </f:else>
-            </f:if>
-        </div>
+<f:if condition="{allowEditContent} && {column.contentEditable} && {column.context.allowNewContent} && {column.active}">
+    <div class="t3-page-ce t3js-page-ce" data-page="{column.context.pageId}" id="{column.uniqueId}">
+        <f:render partial="PageLayout/ActionControls" arguments="{column: column, newContentTitle: newContentTitle, allowEditContent: allowEditContent, url: column.newContentUrl}" />
         <div class="t3-page-ce-dropzone t3js-page-ce-dropzone-available"></div>
     </div>
 </f:if>
+
 <f:if condition="{collapsable}">
-<div class="t3-page-ce container-collapsed-column-marker t3js-expand-column">
-    <button type="button" class="btn btn-default btn-sm">
-        <core:icon identifier="actions-view-list-expand"/>
-    </button>
-    {f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:contentcollapsed')}
-</div>
+    <div class="m-3 container-collapsed-column-marker t3js-expand-column">
+        <button type="button" class="btn btn-default btn-sm me-2">
+            <core:icon identifier="actions-view-list-expand"/>
+        </button>
+        {f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:contentcollapsed')}
+    </div>
 </f:if>
+
 </html>

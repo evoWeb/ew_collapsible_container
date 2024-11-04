@@ -2,10 +2,14 @@
     xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
     data-namespace-typo3-fluid="true"
 >
+
 <f:be.pageRenderer
     includeCssFiles="{0: 'EXT:ew_collapsible_container/Resources/Public/Css/container.css'}"
     includeJavaScriptModules="{0: '@evoweb/ew-collapsible-container/container.js'}" />
-<f:if condition="{containerGrid}">
-    <f:render partial="PageLayout/Grid" arguments="{grid: containerGrid, hideRestrictedColumns: hideRestrictedColumns, newContentTitle: newContentTitle, newContentTitleShort: newContentTitleShort, allowEditContent: allowEditContent, collapsable: 1}" />
+<f:variable name="collapsable" value="1"/>
+
+<f:if condition="{grid}">
+    <f:render partial="PageLayout/Grid" arguments="{_all}" />
 </f:if>
+
 </html>

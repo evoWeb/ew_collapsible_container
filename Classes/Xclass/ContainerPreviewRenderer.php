@@ -19,7 +19,6 @@ use B13\Container\Backend\Grid\ContainerGridColumn;
 use B13\Container\Backend\Grid\ContainerGridColumnItem;
 use B13\Container\Backend\Preview\ContainerPreviewRenderer as BaseContainerPreviewRenderer;
 use B13\Container\Domain\Factory\Exception;
-use Evoweb\EwCollapsibleContainer\Xclass\ContainerGridColumn as BaseContainerGridColumn;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
@@ -33,13 +32,12 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
         $content = StandardContentPreviewRenderer::renderPageModulePreviewContent($item);
-        // @extensionScannerIgnoreLine
         $context = $item->getContext();
         $record = $item->getRecord();
         $grid = GeneralUtility::makeInstance(Grid::class, $context);
         try {
             $container = $this->containerFactory->buildContainer((int)$record['uid']);
-        } catch (Exception) {
+        } catch (Exception $e) {
             // not a container
             return $content;
         }
@@ -47,36 +45,15 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
         foreach ($containerGrid as $cols) {
             $rowObject = GeneralUtility::makeInstance(GridRow::class, $context);
             foreach ($cols as $col) {
-                $newContentElementAtTopTarget = $this->containerService->getNewContentElementAtTopTargetInColumn(
-                    $container,
-                    $col['colPos']
-                );
-                $allowNewContentElements = !$this->containerColumnConfigurationService->isMaxitemsReached(
-                    $container,
-                    $col['colPos']
-                );
-                $columnObject = GeneralUtility::makeInstance(
-                    ContainerGridColumn::class,
-                    $context,
-                    $col,
-                    $container,
-                    $newContentElementAtTopTarget,
-                    $allowNewContentElements,
-                    false,
-                    $col['minitems'] ?? 0
-                );
-                $this->setColumnCollapsedState((int)$record['uid'], $columnObject, $col);
+                $defVals = $this->getDefValsForContentDefenderAllowsOnlyOneSpecificContentType($record['CType'], (int)$col['colPos']);
+                $url = $this->newContentUrlBuilder->getNewContentUrlAtTopOfColumn($context, $container, (int)$col['colPos'], $defVals);
+                $columnObject = GeneralUtility::makeInstance(ContainerGridColumn::class, $context, $col, $container, $url, $defVals !== null);
                 $rowObject->addColumn($columnObject);
                 if (isset($col['colPos'])) {
                     $records = $container->getChildrenByColPos($col['colPos']);
                     foreach ($records as $contentRecord) {
-                        $columnItem = GeneralUtility::makeInstance(
-                            ContainerGridColumnItem::class,
-                            $context,
-                            $columnObject,
-                            $contentRecord,
-                            $container
-                        );
+                        $url = $this->newContentUrlBuilder->getNewContentUrlAfterChild($context, $container, (int)$col['colPos'], (int)$contentRecord['uid'], $defVals);
+                        $columnItem = GeneralUtility::makeInstance(ContainerGridColumnItem::class, $context, $columnObject, $contentRecord, $container, $url);
                         $columnObject->addItem($columnItem);
                     }
                 }
@@ -92,40 +69,19 @@ class ContainerPreviewRenderer extends BaseContainerPreviewRenderer
         $view->setLayoutRootPaths($layoutRootPaths);
         $view->setTemplatePathAndFilename($gridTemplate);
 
-        $view->assign(
-            'hideRestrictedColumns',
-            (bool)(
-                BackendUtility::getPagesTSconfig(
-                    $context->getPageId()
-                )['mod.']['web_layout.']['hideRestrictedCols'] ?? false
-            )
-        );
-        $view->assign(
-            'newContentTitle',
-            $this->getLanguageService()->sL(
-                'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:newContentElement'
-            )
-        );
-        $view->assign(
-            'newContentTitleShort',
-            $this->getLanguageService()->sL('LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:content')
-        );
+        $view->assign('hideRestrictedColumns', (bool)(BackendUtility::getPagesTSconfig($context->getPageId())['mod.']['web_layout.']['hideRestrictedCols'] ?? false));
+        $view->assign('newContentTitle', $this->getLanguageService()->sL('LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:newContentElement'));
+        $view->assign('newContentTitleShort', $this->getLanguageService()->sL('LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:content'));
         $view->assign('allowEditContent', $this->getBackendUser()->check('tables_modify', 'tt_content'));
+        // keep compatibility
         $view->assign('containerGrid', $grid);
+        $view->assign('grid', $grid);
         $view->assign('containerRecord', $record);
+        $view->assign('context', $context);
+        $beforeContainerPreviewIsRendered = new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $item);
+        $this->eventDispatcher->dispatch($beforeContainerPreviewIsRendered);
         $rendered = $view->render();
 
         return $content . $rendered;
-    }
-
-    protected function setColumnCollapsedState(int $recordUid, BaseContainerGridColumn $columnObject, array $col): void
-    {
-        $collapseId = $recordUid . ContainerGridColumn::CONTAINER_COL_POS_DELIMITER . $columnObject->getColumnNumber();
-        if (isset($this->getBackendUser()->uc['moduleData']['list']['containerExpanded'][$collapseId])) {
-            $collapsed = $this->getBackendUser()->uc['moduleData']['list']['containerExpanded'][$collapseId] > 0;
-        } else {
-            $collapsed = (bool)($col['collapsed'] ?? false);
-        }
-        $columnObject->setCollapsed($collapsed);
     }
 }

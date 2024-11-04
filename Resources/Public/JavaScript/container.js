@@ -1,5 +1,5 @@
 /*
- * This file is part of the TYPO3 CMS project.
+ * This file is developed by evoWeb.
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
@@ -7,8 +7,6 @@
  *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
  */
 
 import PersistentStorage from '@typo3/backend/storage/persistent.js';
@@ -42,13 +40,15 @@ class ContainerToggle {
    * initialize the toggle icons to open listings of nested grid container structure in the list module
    */
   initializeContainerToggle() {
-    [...document.querySelectorAll(this.containerColumnToggle)].forEach(container => {
+    const containers = Array.from(document.querySelectorAll(this.containerColumnToggle));
+    containers.forEach(container=> {
       container.addEventListener('click', event => this.toggleClicked(event));
     });
   }
 
   initializeExpandColumn() {
-    [...document.querySelectorAll(this.columnExpand)].forEach(columnExpander => {
+    const columnExpanders = Array.from(document.querySelectorAll(this.columnExpand));
+    columnExpanders.forEach(columnExpander=> {
       columnExpander.addEventListener('click', event => this.expandClicked(event));
     });
   }
