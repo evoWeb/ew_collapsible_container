@@ -15,9 +15,9 @@ declare(strict_types=1);
 
 namespace Evoweb\EwCollapsibleContainer\EventListener;
 
-use B13\Container\Backend\Grid\ContainerGridColumn;
-use Evoweb\EwCollapsibleContainer\Xclass\BeforeContainerPreviewIsRenderedEvent;
-use Evoweb\EwCollapsibleContainer\Xclass\ContainerGridColumn as BaseContainerGridColumn;
+use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
+use B13\Container\Backend\Grid\ContainerGridColumn as BaseContainerGridColumn;
+use Evoweb\EwCollapsibleContainer\Xclass\ContainerGridColumn;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 
@@ -35,16 +35,16 @@ class BeforeContainerPreviewIsRenderedListener
         }
     }
 
-    protected function setColumnCollapsedState(int $recordUid, BaseContainerGridColumn $columnObject): void
+    protected function setColumnCollapsedState(int $recordUid, ContainerGridColumn $column): void
     {
         $backendUser = $this->getBackendUser();
-        $collapseId = $recordUid . ContainerGridColumn::CONTAINER_COL_POS_DELIMITER . $columnObject->getColumnNumber();
+        $collapseId = $recordUid . BaseContainerGridColumn::CONTAINER_COL_POS_DELIMITER . $column->getColumnNumber();
         if (isset($backendUser->uc['moduleData']['list']['containerExpanded'][$collapseId])) {
             $collapsed = $backendUser->uc['moduleData']['list']['containerExpanded'][$collapseId] > 0;
         } else {
-            $collapsed = (bool)($columnObject->getDefinition()['collapsed'] ?? false);
+            $collapsed = (bool)($column->getDefinition()['collapsed'] ?? false);
         }
-        $columnObject->setCollapsed($collapsed);
+        $column->setCollapsed($collapsed);
     }
 
     protected function getBackendUser(): BackendUserAuthentication

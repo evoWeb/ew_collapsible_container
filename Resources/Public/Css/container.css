@@ -2,10 +2,7 @@
     display: inline-block;
 }
 
-[data-collapse-state="collapsed"] {
-    display: none;
-}
-
+[data-collapse-state="collapsed"],
 .container-collapsed-column-marker {
     display: none;
 }
@@ -23,10 +20,7 @@
         display: block;
     }
 
-    .t3-page-ce {
-        display: none;
-    }
-
+    .t3-page-ce,
     .t3-page-ce-wrapper {
         display: none;
     }

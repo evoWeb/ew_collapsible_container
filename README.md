@@ -31,10 +31,17 @@ $configuration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
                 'colPos' => 200,
                 'allowed' => ['CType' => 'kwicks_element'],
                 'collapsed' => true,
+                'minitems' => 1,
+                'maxitems' => 5,
             ]
         ]
     ]
 );
+
+$configuration->setGroup('ew_fischer');
+$configuration->setIcon('content-card-group');
+
+GeneralUtility::makeInstance(Registry::class)->configureContainer($configuration);
 ```
 
 Add setTemplate to disable ability to collapse for defined container elements.
