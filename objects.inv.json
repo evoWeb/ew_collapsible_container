@@ -1,5 +1,11 @@
 {
     "std:doc": {
+        "Example\/Index": [
+            "Collapsible container",
+            "1.4.4",
+            "Example\/Index.html",
+            "Example"
+        ],
         "Index": [
             "Collapsible container",
             "1.4.4",
@@ -20,6 +26,12 @@
         ]
     },
     "std:label": {
+        "example": [
+            "Collapsible container",
+            "1.4.4",
+            "Example\/Index.html#example",
+            "Example"
+        ],
         "start": [
             "Collapsible container",
             "1.4.4",
@@ -34,6 +46,12 @@
         ]
     },
     "std:title": {
+        "example-1": [
+            "Collapsible container",
+            "1.4.4",
+            "Example\/Index.html#example-1",
+            "Example"
+        ],
         "container-with-collapsible-columns": [
             "Collapsible container",
             "1.4.4",

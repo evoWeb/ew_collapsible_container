@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
-    <title>Collapsible container 1.4.4 documentation</title>
+    <title>Collapsible container 1.4.4
+        documentation</title>
 
     
 <meta charset="utf-8">
@@ -11,9 +12,9 @@
 <meta content="" name="docsearch:package_type">
 <meta content="1.4.4" name="docsearch:release">
 <meta content="1.4.4" name="docsearch:version">
-<meta content="2024-11-02T13:51:39+00:00" name="docsearch:modified">
-<meta content="2024-11-02T13:51:39+00:00" name="dc.modified">
-<meta content="2024-11-02T13:51:39+00:00" property="article:modified_time">
+<meta content="2024-11-08T06:48:28+00:00" name="docsearch:modified">
+<meta content="2024-11-08T06:48:28+00:00" name="dc.modified">
+<meta content="2024-11-08T06:48:28+00:00" property="article:modified_time">
     <link href="http://purl.org/dc/elements/1.1/" rel="schema.dc">
 <link href="../_resources/css/theme.css" rel="stylesheet">
 <link href="https://docs.typo3.org/search/" rel="search" title="Search">
@@ -41,7 +42,7 @@
                 </div>
                 <div class="col-md-10 col-lg-8">
                     <div class="menu-search-wrapper">
-                        <all-documentations-menu data-override-url="https://render-guides.ddev.site/menu-proxy.php"></all-documentations-menu>
+                        <all-documentations-menu data-override-url="https://render-guides.ddev.site/_resources/js/menu-proxy.php"></all-documentations-menu>
                                                 <search role="search">
                             <form action="https://docs.typo3.org/search/search" id="global-search-form" method="get">
                                 <div class="sr-only"><label for="globalsearchinput">TYPO3 documentation...</label></div>
@@ -63,8 +64,6 @@
         <div class="page-main-inner">
             <div class="page-main-navigation">
                 <nav>
-                    <input class="toc-checkbox" id="toggleToc" type="checkbox">
-
                     
 <div class="toc-header">
     <div class="toc-title">
@@ -75,22 +74,23 @@
                     https://docs.typo3.org/other/t3docs/render-guides/main/en-us/Developer/AjaxVersions.html
                 -->
 
-                <div id="toc-version" class="toc-version" data-override-url-proxy="https://render-guides.ddev.site/versions-proxy.php?url=" data-override-url-self="https://docs.typo3.org/m/typo3/tutorial-getting-started/12.4/en-us/Concepts/Index.html">
+                <div id="toc-version" class="toc-version" data-override-url-proxy="https://render-guides.ddev.site/_resources/js/versions-proxy.php?url=" data-override-url-self="https://docs.typo3.org/m/typo3/tutorial-getting-started/12.4/en-us/Concepts/Index.html">
                 
                     <span class="toc-version-prefix">Release:</span>
-                    <span class="toc-version-number">1.4.4</span>
+                    <span class="toc-version-number" tabindex="0">1.4.4</span>
                 </div>
                 <div id="toc-version-options" class="toc-version-options">
                     <p><span class="fa fa-spinner fa-spin"></span> Loading data.</p>
                 </div>
             </div></div>
     <div class="toc-actions">
-        <label class="toc-toggle" for="toggleToc">
+        <button id="toc-toggle" class="btn btn-light d-block d-lg-none" tabindex="0" aria-controls="toc-collapse" aria-expanded="false">
             Menu
-        </label>
+        </button>
     </div>
-</div>                    <div class="toc-collapse">
-                                                <div aria-label="main navigation" class="toc" role="navigation">
+</div>                    <div id="toc-collapse">
+                                                <div aria-label="main navigation" class="toc"
+                             role="navigation">
                                                                                 </div>
                     </div>
                 </nav>
@@ -145,7 +145,7 @@ license.</p>
 
         <dd class="field-odd">
             
-    <p>Sat, 02 Nov 2024 13:51:39 +0000</p>
+    <p>Fri, 08 Nov 2024 06:48:28 +0000</p>
         </dd>
             <dt class="field-odd">Copyright</dt>
 
@@ -171,6 +171,11 @@ a GNU/GPL CMS/Framework available from <a href="http://typo3.org">http://typo3.o
         <ul class="menu-level">
     <li class="toc-item">
     <a href="#installation-1">Installation</a>
+
+
+</li>
+    <li class="toc-item">
+    <a href="#example-1">Example</a>
 
 
 </li>
@@ -228,7 +233,7 @@ license.</p>
 
         <dd class="field-odd">
             
-    <p>Sat, 02 Nov 2024 13:51:39 +0000</p>
+    <p>Fri, 08 Nov 2024 06:48:28 +0000</p>
         </dd>
             <dt class="field-odd">Copyright</dt>
 
@@ -254,6 +259,11 @@ a GNU/GPL CMS/Framework available from <a href="http://typo3.org">http://typo3.o
         <ul class="menu-level">
     <li class="toc-item">
     <a href="#installation-1">Installation</a>
+
+
+</li>
+    <li class="toc-item">
+    <a href="#example-1">Example</a>
 
 
 </li>
@@ -291,6 +301,48 @@ a GNU/GPL CMS/Framework available from <a href="http://typo3.org">http://typo3.o
         </article>
 <article>
             
+<section class="section" id="example-1" data-rst-anchor="example">
+            <a id="example"></a>
+            <h1>Example<a class="headerlink" href="#example-1" data-bs-toggle="modal" data-bs-target="#linkReferenceModal"  title="Reference this headline"><i class="fa-solid fa-paragraph"></i></a></h1>
+                <div class="code-block-caption">
+        <span class="caption-text">Configuration/TCA/Overrides/tt_content.php</span>
+    </div><div class="code-block-wrapper" translate="no">
+            
+    <pre class="code-block"><code class="hljs php">$configuration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+    \B13\Container\Tca\ContainerConfiguration::class,
+    <span class="hljs-string">'demo_container'</span>,
+    $languageFile . <span class="hljs-string">'CType.I.demo_container'</span>,
+    $languageFile . <span class="hljs-string">'CType.I.demo_container-plus_wiz_description'</span>,
+    [
+        [
+            [
+                <span class="hljs-string">'name'</span> =&gt; <span class="hljs-string">'Elements'</span>,
+                <span class="hljs-string">'colPos'</span> =&gt; <span class="hljs-number">200</span>,
+                <span class="hljs-string">'allowed'</span> =&gt; [<span class="hljs-string">'CType'</span> =&gt; <span class="hljs-string">'kwicks_element'</span>],
+                <span class="hljs-string">'collapsed'</span> =&gt; <span class="hljs-keyword">true</span>,
+                <span class="hljs-string">'minitems'</span> =&gt; <span class="hljs-number">1</span>,
+                <span class="hljs-string">'maxitems'</span> =&gt; <span class="hljs-number">5</span>,
+            ]
+        ]
+    ]
+);
+
+$configuration-&gt;setGroup(<span class="hljs-string">'ew_fischer'</span>);
+$configuration-&gt;setIcon(<span class="hljs-string">'content-card-group'</span>);
+
+GeneralUtility::makeInstance(Registry::class)-&gt;configureContainer($configuration);</code></pre>
+    <div class="code-block-actions">        <button class="code-block-copy" title="Copy to clipboard">
+            <i class="icon fa-regular fa-copy code-block-copy-icon"></i>
+            <i class="fa-solid fa-check code-block-check-icon code-block-hide"></i>
+        </button>
+        <span class="code-block-check-tooltip code-block-hide" aria-live="polite">Copied!</span>
+    </div>
+</div>
+    </section>
+
+        </article>
+<article>
+            
 <section class="section" id="sitemap">
             <h1>Sitemap<a class="headerlink" href="#sitemap" data-bs-toggle="modal" data-bs-target="#linkReferenceModal"  title="Reference this headline"><i class="fa-solid fa-paragraph"></i></a></h1>
     </section>
@@ -313,26 +365,31 @@ a GNU/GPL CMS/Framework available from <a href="http://typo3.org">http://typo3.o
             <div class="modal-body">
                 <div class="alert alert-success d-none" id="permalink-alert-success" role="alert"></div>
                 <div class="mb-3">
-                    <label for="permalink-uri" class="col-form-label">Permalink</label>
+                    <label for="permalink-uri" class="col-form-label">URL</label>
                     <div class="input-group">
                         <input class="form-control code" id="permalink-uri" readonly>
                         <button type="button" class="btn btn-outline-secondary copy-button" data-target="permalink-uri"><i class="far fa-clone"></i></button>
                     </div>
-                    <p>Copy and freely share the link</p>
+                    <label for="permalink-short" class="col-form-label">Permalink (Shortlink)</label>
+                    <div class="input-group">
+                        <input class="form-control code" id="permalink-short" readonly>
+                        <button type="button" class="btn btn-outline-secondary copy-button" data-target="permalink-short"><i class="far fa-clone"></i></button>
+                    </div>
+                    <p><em>Copy and freely share the link</em></p>
                 </div>
                 <div class="mb-3">
                     <div class="alert alert-warning alert-permalink-rst" role="alert">This link target has no permanent anchor assigned.The link below can be used, but is prone to change if the page gets moved.
                     </div>
-                    <label for="permalink-rst" class="col-form-label">reStructuredText (reST):</label>
+                    <label for="permalink-rst" class="col-form-label">Link in reStructuredText (reST)</label>
                     <div class="input-group">
                         <textarea class="form-control code" id="permalink-rst" readonly></textarea>
                         <button type="button" class="btn btn-outline-secondary copy-button" data-target="permalink-rst"><i class="far fa-clone"></i></button>
                     </div>
-                    <p>Copy this link into your TYPO3 manual. </p>
+                    <p><em>Copy this link into your TYPO3 manual.</em></p>
                 </div>
                 <div class="mb-3">
-                    <label for="permalink-html" class="col-form-label">HTML:</label>
-                    <div class="input-group">
+                    <label for="permalink-html" class="col-form-label">Link in HTML</label>
+                                        <div class="input-group">
                         <textarea class="form-control code" id="permalink-html" readonly></textarea>
                         <button type="button" class="btn btn-outline-secondary copy-button" data-target="permalink-html"><i class="far fa-clone"></i></button>
                     </div>
@@ -376,7 +433,7 @@ a GNU/GPL CMS/Framework available from <a href="http://typo3.org">http://typo3.o
                                                 <li><a href="https://github.com/evoweb/ew_collapsible_container/issues" rel="nofollow noopener" title="Issues"><span>Issues</span></a></li>
                                                 <li><a href="https://github.com/evoweb/ew_collapsible_container" rel="nofollow noopener" title="Repository"><span>Repository</span></a></li>
                                             </ul>                <div class="footer-additional">
-                    <p class="text-center">Last rendered: Nov 02, 2024 13:51</p>
+                    <p class="text-center">Last rendered: Nov 08, 2024 06:48</p>
                 </div>
                 <div class="footer-meta">
                                         <div class="footer-meta-copyright">

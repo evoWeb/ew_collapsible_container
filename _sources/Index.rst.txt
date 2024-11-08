@@ -49,6 +49,7 @@ a GNU/GPL CMS/Framework available from http://typo3.org
    :titlesonly:
 
    Installation/Index
+   Example/Index
 
 .. Meta Menu
 
