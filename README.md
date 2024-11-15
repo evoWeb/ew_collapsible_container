@@ -1,6 +1,6 @@
 # TYPO3 Extending extbase domain models
 
-![build](https://github.com/evoWeb/ew_collapsible_container/workflows/build/badge.svg?branch=develop)
+![build](https://github.com/evoWeb/ew_collapsible_container/actions/workflows/ci.yml/badge.svg?branch=develop)
 [![Latest Stable Version](https://poser.pugx.org/evoweb/ew-collapsible-container/v/stable)](https://packagist.org/packages/evoweb/ew-collapsible-container)
 [![Monthly Downloads](https://poser.pugx.org/evoweb/ew-collapsible-container/d/monthly)](https://packagist.org/packages/evoweb/ew-collapsible-container)
 [![Total Downloads](https://poser.pugx.org/evoweb/ew-collapsible-container/downloads)](https://packagist.org/packages/evoweb/ew-collapsible-container)
