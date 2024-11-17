@@ -7,9 +7,9 @@
 		"GPL-2.0-or-later"
 	],
 	"support" : {
-		"source" : "https://github.com/evoWeb/sf_books",
-		"issues" : "https://github.com/evoWeb/sf_books/issues",
-		"docs": "https://docs.typo3.org/p/evoweb/sf-books/main/en-us/"
+		"source" : "https://github.com/evoWeb/ew_collapsible_container",
+		"issues" : "https://github.com/evoWeb/ew_collapsible_container/issues",
+		"docs": "https://ew-collapsible-container.evoweb.de/"
 	},
 	"config": {
 		"vendor-dir": "Build/vendor",
