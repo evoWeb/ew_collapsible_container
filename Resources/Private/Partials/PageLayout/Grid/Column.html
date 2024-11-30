@@ -7,6 +7,8 @@
     {f:if(condition: column.unassigned, then: 't3-grid-cell-unassigned')}
     {f:if(condition: '!{column.active} && !{column.unused}', then: 't3-grid-cell-restricted')}
     {f:if(condition: '!{column.active} && {hideRestrictedColumns} && !{column.unused}', then: 't3-grid-cell-hidden')}
+    t3-gridCell-width{column.colSpan}
+    t3-gridCell-height{column.rowSpan}
     {f:if(condition: column.definition.collapsed, then: 'collapsed')}
 </f:variable>
 
@@ -18,7 +20,8 @@
     <f:if condition="{column.active} || {column.unused}">
         <div data-colpos="{column.columnNumber}" data-language-uid="{column.context.siteLanguage.languageId}"
              data-collapse-colpos="{column.containerUid}-{column.columnNumber}"
-             class="t3-page-ce-wrapper {f:if(condition: column.items, else: 't3-page-ce-empty')}">
+             class="t3js-sortable t3js-sortable-lang t3js-sortable-lang-{column.context.siteLanguage.languageId} t3-page-ce-wrapper
+            {f:if(condition: column.items, else: 't3-page-ce-empty')}">
             <f:for each="{column.items}" as="item">
                 <f:render partial="PageLayout/Record" arguments="{_all}" />
             </f:for>

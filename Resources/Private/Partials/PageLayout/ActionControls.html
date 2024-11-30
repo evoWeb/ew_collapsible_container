@@ -4,17 +4,15 @@
 <div class="t3-page-ce-actions t3js-page-new-ce" id="colpos-{column.columnNumber}-page-{column.context.pageId}-{column.uniqueId}">
     <f:if condition="{column.newContentElementWizardShouldBeSkipped}">
         <f:then>
-            <a href="{column.newContentUrl}" title="{newContentTitle}" class="btn btn-default btn-sm">
+            <a class="btn btn-default btn-sm" href="{column.newContentUrl}" title="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:newContentElement')}">
                 <core:icon identifier="actions-add" />
                 <f:translate key="LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:createNewContent" />
             </a>
         </f:then>
         <f:else>
-            <typo3-backend-new-content-element-wizard-button  class="btn btn-default btn-sm" url="{column.newContentUrl}" subject="{newContentTitle}">
-                <button type="button" class="btn btn-default btn-sm">
-                    <core:icon identifier="actions-add" />
-                    <f:translate key="LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:createNewContent" />
-                </button>
+            <typo3-backend-new-content-element-wizard-button  class="btn btn-default btn-sm" url="{column.newContentUrl}" subject="{f:translate(key: 'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:newContentElement')}">
+                <core:icon identifier="actions-add" />
+                <f:translate key="LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:createNewContent" />
             </typo3-backend-new-content-element-wizard-button>
         </f:else>
     </f:if>
