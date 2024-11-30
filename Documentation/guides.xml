@@ -16,8 +16,8 @@
                interlink-shortcode="evoweb/sf-books"
     />
     <project title="Collapsible container"
-             release="1.4.4"
-             version="1.4.4"
+             release="2.1.0"
+             version="2.1.0"
              copyright="since 2024 by evoWeb"
     />
     <inventory id="t3tsref" url="https://docs.typo3.org/m/typo3/reference-typoscript/main/en-us/"/>
