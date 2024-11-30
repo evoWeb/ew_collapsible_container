@@ -1,6 +1,6 @@
 # TYPO3 Extending extbase domain models
 
-![build](https://github.com/evoWeb/ew-collapsible-container/workflows/build/badge.svg?branch=develop)
+![build](https://github.com/evoWeb/ew_collapsible_container/actions/workflows/ci.yml/badge.svg?branch=develop)
 [![Latest Stable Version](https://poser.pugx.org/evoweb/ew-collapsible-container/v/stable)](https://packagist.org/packages/evoweb/ew-collapsible-container)
 [![Monthly Downloads](https://poser.pugx.org/evoweb/ew-collapsible-container/d/monthly)](https://packagist.org/packages/evoweb/ew-collapsible-container)
 [![Total Downloads](https://poser.pugx.org/evoweb/ew-collapsible-container/downloads)](https://packagist.org/packages/evoweb/ew-collapsible-container)
@@ -31,10 +31,17 @@ $configuration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
                 'colPos' => 200,
                 'allowed' => ['CType' => 'kwicks_element'],
                 'collapsed' => true,
+                'minitems' => 1,
+                'maxitems' => 5,
             ]
         ]
     ]
 );
+
+$configuration->setGroup('ew_fischer');
+$configuration->setIcon('content-card-group');
+
+GeneralUtility::makeInstance(Registry::class)->configureContainer($configuration);
 ```
 
 Add setTemplate to disable ability to collapse for defined container elements.

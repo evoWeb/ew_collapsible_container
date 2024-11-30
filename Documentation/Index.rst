@@ -1,8 +1,10 @@
 .. include:: /Includes.rst.txt
 
-============================================================
-ew_collapsible_container: Container with collapsible columns
-============================================================
+..  _start:
+
+==================================
+Container with collapsible columns
+==================================
 
 :Extension key:
     ew_collapsible_container
@@ -16,13 +18,6 @@ ew_collapsible_container: Container with collapsible columns
 :Language:
     en
 
-:Description:
-    Adds collapsibility to container columns and directly link
-    into record form, if only one child type is allowed
-
-:Copyright:
-    2024-2024
-
 :Author:
     Sebastian Fischer
 
@@ -34,7 +29,13 @@ ew_collapsible_container: Container with collapsible columns
 :Rendered:
     |today|
 
+:Copyright:
+    2024-2024
+
 ----
+
+Adds collapsibility to container columns and directly link
+into record form, if only one child type is allowed
 
 The content of this document is related to TYPO3,
 a GNU/GPL CMS/Framework available from http://typo3.org
@@ -48,6 +49,7 @@ a GNU/GPL CMS/Framework available from http://typo3.org
    :titlesonly:
 
    Installation/Index
+   Example/Index
 
 .. Meta Menu
 

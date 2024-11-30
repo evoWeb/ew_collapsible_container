@@ -15,7 +15,7 @@
                typo3-core-preferred="stable"
                interlink-shortcode="evoweb/sf-books"
     />
-    <project title="ew_collapsible_container"
+    <project title="Collapsible container"
              release="1.4.4"
              version="1.4.4"
              copyright="since 2024 by evoWeb"

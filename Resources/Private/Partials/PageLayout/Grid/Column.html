@@ -1,16 +1,25 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:variable name="colpos" value="{f:if(condition: column.unused, then: 'unused', else: column.columnNumber)}"/>
+<f:variable name="columnIdentifier" value="columnIdentifier_column-{colpos}" />
+<f:variable name="columnClasses">
+    t3js-page-column t3-grid-cell t3-page-column
+    {f:if(condition: column.unassigned, then: 't3-grid-cell-unassigned')}
+    {f:if(condition: '!{column.active} && !{column.unused}', then: 't3-grid-cell-restricted')}
+    {f:if(condition: '!{column.active} && {hideRestrictedColumns} && !{column.unused}', then: 't3-grid-cell-hidden')}
+    t3-gridCell-width{column.colSpan}
+    t3-gridCell-height{column.rowSpan}
+    {f:if(condition: column.definition.collapsed, then: 'collapsed')}
+</f:variable>
+
 <td valign="top" colspan="{column.colSpan}" rowspan="{column.rowSpan}"
     data-colpos="{column.columnNumber}" data-tx-container-parent="{column.containerUid}" data-language-uid="{column.context.siteLanguage.languageId}"
-    class="t3js-page-lang-column-{column.context.siteLanguage.languageId} t3js-page-column t3-grid-cell t3-page-column t3-page-column-{column.columnNumber}
-        {f:if(condition: column.active, else: 't3-grid-cell-unassigned')}
-        {f:if(condition: '!{column.active} && !{column.unused}', then: 't3-grid-cell-restricted')}
-        {f:if(condition: '!{column.active} && {hideRestrictedColumns} && !{column.unused}', then: 't3-grid-cell-hidden')}
-        {f:if(condition: column.collapsed, then: 'collapsed')}
-        t3-gridCell-width{column.colSpan}
-        t3-gridCell-height{column.rowSpan}" role="group" aria-labelledby="{columnIdentifier}">
+    class="{columnClasses -> f:spaceless()}"
+    role="group" aria-labelledby="{columnIdentifier}">
     <f:render partial="PageLayout/Grid/ColumnHeader" arguments="{_all}" />
     <f:if condition="{column.active} || {column.unused}">
-        <div data-colpos="{column.containerUid}-{column.columnNumber}" data-language-uid="{column.context.siteLanguage.languageId}"
+        <div data-colpos="{column.columnNumber}" data-language-uid="{column.context.siteLanguage.languageId}"
+             data-collapse-colpos="{column.containerUid}-{column.columnNumber}"
              class="t3js-sortable t3js-sortable-lang t3js-sortable-lang-{column.context.siteLanguage.languageId} t3-page-ce-wrapper
             {f:if(condition: column.items, else: 't3-page-ce-empty')}">
             <f:for each="{column.items}" as="item">
