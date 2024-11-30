@@ -56,7 +56,7 @@ class ContainerGridColumn extends BaseContainerGridColumn
     public function hasShowMinItemsWarning(): bool
     {
         return count($this->items) > 0
-            && (count($this->items) - $this->getHiddenItemCount()) < $this->getMinItems();
+            && (count($this->items) - $this->getCountOfHiddenItems()) < $this->getMinItems();
     }
 
     public function getMinItems(): int
@@ -64,7 +64,7 @@ class ContainerGridColumn extends BaseContainerGridColumn
         return $this->minItems;
     }
 
-    public function getHiddenItemCount(): int
+    public function getCountOfHiddenItems(): int
     {
         return count(
             array_filter(
