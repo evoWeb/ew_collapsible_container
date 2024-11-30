@@ -15,6 +15,8 @@ declare(strict_types=1);
 
 namespace Evoweb\EwCollapsibleContainer\EventListener;
 
+use B13\Container\Backend\Grid\ContainerGridColumn as BaseContainerGridColum;
+use B13\Container\Backend\Grid\ContainerGridColumnItem;
 use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
 use Evoweb\EwCollapsibleContainer\Xclass\ContainerGridColumn;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
@@ -25,25 +27,48 @@ class BeforeContainerPreviewIsRenderedListener
     #[AsEventListener('collapsible-container-beforepreview', BeforeContainerPreviewIsRenderedEvent::class)]
     public function __invoke(BeforeContainerPreviewIsRenderedEvent $event): void
     {
-        $grid = $event->getGrid();
         $record = $event->getItem()->getRecord();
 
-        /** @var ContainerGridColumn $columnObject */
-        foreach ($grid->getColumns() as $columnObject) {
-            $this->setColumnCollapsedState((int)$record['uid'], $columnObject);
+        /** @var ContainerGridColumn $column */
+        foreach ($event->getGrid()->getColumns() as $column) {
+            $countOfHiddenItems = $this->getCountOfHiddenItems($column);
+            $column->setOverride([
+                'countOfHiddenItems' => $countOfHiddenItems,
+                'collapsed' => $this->getColumnCollapsed((int)$record['uid'], $column),
+                'showMinItemsWarning' => $this->getShowMinItemsWarning($column, $countOfHiddenItems)
+            ]);
         }
     }
 
-    protected function setColumnCollapsedState(int $recordUid, ContainerGridColumn $column): void
+    protected function getCountOfHiddenItems(ContainerGridColumn $columnObject): int
+    {
+        return count(
+            array_filter(
+                $columnObject->getItems(),
+                fn (ContainerGridColumnItem $item) => ($item->getRecord()['hidden'] ?? 0) > 0
+            )
+        );
+    }
+
+    protected function getColumnCollapsed(int $recordUid, ContainerGridColumn $columnObject): bool
     {
         $backendUser = $this->getBackendUser();
-        $collapseId = $recordUid . ContainerGridColumn::CONTAINER_COL_POS_DELIMITER . $column->getColumnNumber();
+        $collapseId = $recordUid
+            . BaseContainerGridColum::CONTAINER_COL_POS_DELIMITER
+            . $columnObject->getColumnNumber();
         if (isset($backendUser->uc['moduleData']['list']['containerExpanded'][$collapseId])) {
             $collapsed = $backendUser->uc['moduleData']['list']['containerExpanded'][$collapseId] > 0;
         } else {
-            $collapsed = (bool)($column->getDefinition()['collapsed'] ?? false);
+            $collapsed = (bool)($columnObject->getDefinition()['collapsed'] ?? false);
         }
-        $column->setCollapsed($collapsed);
+        return $collapsed;
+    }
+
+    protected function getShowMinItemsWarning(ContainerGridColumn $columnObject, int $hiddenItemCount): bool
+    {
+        $itemCount = count($columnObject->getItems());
+        $minItems = (int)($columnObject->getDefinition()['minitems'] ?? 0);
+        return $itemCount > 0 && ($itemCount - $hiddenItemCount) < $minItems;
     }
 
     protected function getBackendUser(): BackendUserAuthentication

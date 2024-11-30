@@ -15,62 +15,19 @@ declare(strict_types=1);
 
 namespace Evoweb\EwCollapsibleContainer\Xclass;
 
-use B13\Container\Backend\Grid\ContainerGridColumnItem;
 use B13\Container\Backend\Grid\ContainerGridColumn as BaseContainerGridColumn;
-use B13\Container\Domain\Model\Container;
-use TYPO3\CMS\Backend\View\PageLayoutContext;
 
 class ContainerGridColumn extends BaseContainerGridColumn
 {
-    protected bool $collapsed = false;
+    protected array $override = [];
 
-    protected int $minItems = 0;
-
-    public function __construct(
-        PageLayoutContext $context,
-        array $columnDefinition,
-        Container $container,
-        ?string $newContentUrl,
-        bool $skipNewContentElementWizard
-    ) {
-        parent::__construct(
-            $context,
-            $columnDefinition,
-            $container,
-            $newContentUrl,
-            $skipNewContentElementWizard
-        );
-        $this->minItems = (int)($columnDefinition['minitems'] ?? 0);
+    public function setOverride(array $override): void
+    {
+        $this->override = $override;
     }
 
-    public function getCollapsed(): bool
+    public function getDefinition(): array
     {
-        return $this->collapsed;
-    }
-
-    public function setCollapsed(bool $collapsed): void
-    {
-        $this->collapsed = $collapsed;
-    }
-
-    public function hasShowMinItemsWarning(): bool
-    {
-        return count($this->items) > 0
-            && (count($this->items) - $this->getCountOfHiddenItems()) < $this->getMinItems();
-    }
-
-    public function getMinItems(): int
-    {
-        return $this->minItems;
-    }
-
-    public function getCountOfHiddenItems(): int
-    {
-        return count(
-            array_filter(
-                $this->items,
-                fn (ContainerGridColumnItem $item) => ($item->getRecord()['hidden'] ?? 0) > 0
-            )
-        );
+        return array_merge($this->definition, $this->override);
     }
 }

@@ -32,13 +32,13 @@
                 </f:if>
             </div>
             <span id="{columnIdentifier}">{column.title}</span>
-            <f:if condition="{column.showMinItemsWarning}"><span class="fw-bold link-danger">
-                <f:if condition="{column.hiddenItemCount}">
+            <f:if condition="{column.definition.showMinItemsWarning}"><span class="fw-bold link-danger">
+                <f:if condition="{column.definition.countOfHiddenItems}">
                     <f:then>
-                        <f:translate id="LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:minimum-item-count-not-reached-with-hidden" arguments="{1: column.minitems, 2: column.hiddenItemCount}"/>
+                        <f:translate id="LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:minimum-item-count-not-reached-with-hidden" arguments="{1: column.definition.minitems, 2: column.definition.countOfHiddenItems}"/>
                     </f:then>
                     <f:else>
-                        <f:translate id="LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:minimum-item-count-not-reached" arguments="{1: column.minitems}"/>
+                        <f:translate id="LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:minimum-item-count-not-reached" arguments="{1: column.definition.minitems}"/>
                     </f:else>
                 </f:if>
             </span></f:if>

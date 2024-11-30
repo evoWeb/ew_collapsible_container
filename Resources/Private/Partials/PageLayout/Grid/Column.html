@@ -7,7 +7,7 @@
     {f:if(condition: column.unassigned, then: 't3-grid-cell-unassigned')}
     {f:if(condition: '!{column.active} && !{column.unused}', then: 't3-grid-cell-restricted')}
     {f:if(condition: '!{column.active} && {hideRestrictedColumns} && !{column.unused}', then: 't3-grid-cell-hidden')}
-    {f:if(condition: column.collapsed, then: 'collapsed')}
+    {f:if(condition: column.definition.collapsed, then: 'collapsed')}
 </f:variable>
 
 <td valign="top" colspan="{column.colSpan}" rowspan="{column.rowSpan}"
