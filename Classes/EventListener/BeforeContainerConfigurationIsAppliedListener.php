@@ -23,10 +23,8 @@ class BeforeContainerConfigurationIsAppliedListener
     #[AsEventListener('collapsible-container-beforecontainer', BeforeContainerConfigurationIsAppliedEvent::class)]
     public function __invoke(BeforeContainerConfigurationIsAppliedEvent $event): void
     {
-        $event->getContainerConfiguration()->setGridPartialPaths([
-            'EXT:backend/Resources/Private/Partials/',
-            'EXT:container/Resources/Private/Partials/',
-            'EXT:ew_collapsible_container/Resources/Private/Partials/',
-        ]);
+        $event->getContainerConfiguration()->addGridPartialPath(
+            'EXT:ew_collapsible_container/Resources/Private/Partials/'
+        );
     }
 }
