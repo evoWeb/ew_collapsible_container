@@ -9,6 +9,7 @@
  * LICENSE.txt file that was distributed with this source code.
  */
 
+import DocumentService from '@typo3/core/document-service.js';
 import PersistentStorage from '@typo3/backend/storage/persistent.js';
 
 class ContainerToggle {
@@ -16,22 +17,21 @@ class ContainerToggle {
 
   columnExpand = '.t3js-expand-column';
 
+  /**
+   * @type {PersistentStorage}
+   */
   persistentStorage = null;
 
   storageKey = 'moduleData.list.containerExpanded';
 
   constructor() {
     this.persistentStorage = PersistentStorage;
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        this.initialized();
-      });
-    } else {
-      this.initialized();
-    }
+    DocumentService.ready().then(() => {
+      this.initialize();
+    });
   }
 
-  initialized() {
+  initialize() {
     this.initializeContainerToggle();
     this.initializeExpandColumn();
   }
