@@ -21,9 +21,15 @@ use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
 use Evoweb\EwCollapsibleContainer\Xclass\ContainerGridColumn;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
+use TYPO3\CMS\Core\Page\PageRenderer;
 
 class BeforeContainerPreviewIsRenderedListener
 {
+    public function __construct(protected PageRenderer $pageRenderer)
+    {
+    }
+
     #[AsEventListener('collapsible-container-beforepreview', BeforeContainerPreviewIsRenderedEvent::class)]
     public function __invoke(BeforeContainerPreviewIsRenderedEvent $event): void
     {
@@ -38,6 +44,8 @@ class BeforeContainerPreviewIsRenderedListener
                 'showMinItemsWarning' => $this->getShowMinItemsWarning($column, $countOfHiddenItems)
             ]);
         }
+
+        $this->addFrontendResources();
     }
 
     protected function getCountOfHiddenItems(ContainerGridColumn $columnObject): int
@@ -69,6 +77,14 @@ class BeforeContainerPreviewIsRenderedListener
         $itemCount = count($columnObject->getItems());
         $minItems = (int)($columnObject->getDefinition()['minitems'] ?? 0);
         return $itemCount > 0 && ($itemCount - $hiddenItemCount) < $minItems;
+    }
+
+    protected function addFrontendResources(): void
+    {
+        $this->pageRenderer->addCssFile('EXT:ew_collapsible_container/Resources/Public/Css/container.css');
+        $this->pageRenderer->getJavaScriptRenderer()->addJavaScriptModuleInstruction(
+            JavaScriptModuleInstruction::create('@evoweb/ew-collapsible-container/container.js')
+        );
     }
 
     protected function getBackendUser(): BackendUserAuthentication
