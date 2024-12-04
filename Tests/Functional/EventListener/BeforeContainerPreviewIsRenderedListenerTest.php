@@ -17,12 +17,15 @@ namespace Evoweb\EwCollapsibleContainer\Tests\Functional\EventListener;
 
 use B13\Container\Backend\Grid\ContainerGridColumn;
 use B13\Container\Backend\Grid\ContainerGridColumnItem;
+use B13\Container\Domain\Factory\Database;
 use B13\Container\Domain\Factory\Exception;
 use B13\Container\Domain\Factory\PageView\Backend\ContainerFactory;
+use B13\Container\Domain\Model\Container;
 use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
 use B13\Container\Tca\ContainerConfiguration;
 use B13\Container\Tca\Registry;
 use Evoweb\EwCollapsibleContainer\EventListener\BeforeContainerPreviewIsRenderedListener;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Backend\View\BackendLayout\BackendLayout;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
@@ -74,7 +77,6 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
                         'allowed' => [
                             'CType' => 'test-child',
                         ],
-                        'collapsed' => true,
                     ]
                 ]
             ]
@@ -113,17 +115,21 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         $item = new GridColumnItem($context, (new GridColumn($context, [])), $record);
         $grid = new Grid($context);
 
-        try {
-            $containerFactory = $this->get(ContainerFactory::class);
-            $container = $containerFactory->buildContainer((int)$record['uid']);
-        } catch (Exception $e) {
-            // not a container
-            return null;
+        $language = (int)$record['sys_language_uid'];
+        /** @var Database $database */
+        $database = $this->get(Database::class);
+        $children = $database->fetchRecordsByParentAndLanguage((int)$record['uid'], $language);
+        $childRecordByColPosKey = [];
+        foreach ($children as $child) {
+            if (empty($childRecordByColPosKey[$child['colPos']])) {
+                $childRecordByColPosKey[$child['colPos']] = [];
+            }
+            $childRecordByColPosKey[$child['colPos']][] = $child;
         }
 
-        /** @var Registry $tcaRegistry */
-        $tcaRegistry = $this->get(Registry::class);
-        $containerGrid = $tcaRegistry->getGrid($record['CType']);
+        $container = GeneralUtility::makeInstance(Container::class, $record, $childRecordByColPosKey, $language);
+
+        $containerGrid = $this->get(Registry::class)->getGrid($record['CType']);
         foreach ($containerGrid as $cols) {
             $rowObject = GeneralUtility::makeInstance(GridRow::class, $context);
             foreach ($cols as $col) {
@@ -155,7 +161,9 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         }
 
         /** @var StandaloneView $view */
-        $view = $this->get(StandaloneView::class);
+        $view = $this->getMockBuilder(StandaloneView::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         return new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $item);
     }
@@ -166,13 +174,57 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         $containerRecord = $this->getContentRecords('tx_container_parent', 0);
         $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
 
-        /** @var PageRenderer $pageRenderer */
-        $pageRenderer = $this->get(PageRenderer::class);
-
-        $subject = new BeforeContainerPreviewIsRenderedListener($pageRenderer);
+        $subject = new BeforeContainerPreviewIsRenderedListener($this->get(PageRenderer::class));
         $subject->__invoke($event);
 
-        $columns = $event->getGrid()->getColumns();
+        $definition = $event->getGrid()->getColumns()[200]->getDefinition();
+        $this->assertEquals(1, $definition['countOfHiddenItems']);
+    }
+
+    public static function getCollapsedProvider(): array
+    {
+        return [
+            'falseIsDefault' => [ false ],
+            'trueIsDefault' => [ true ],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('getCollapsedProvider')]
+    public function getCollapsed(bool $state): void
+    {
+        $GLOBALS['TCA']['tt_content']['containerConfiguration']['test-container']['grid'][0][0]['collapsed'] = $state;
+        $containerRecord = $this->getContentRecords('tx_container_parent', 0);
+        $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
+
+        $subject = new BeforeContainerPreviewIsRenderedListener($this->get(PageRenderer::class));
+        $subject->__invoke($event);
+
+        $definition = $event->getGrid()->getColumns()[200]->getDefinition();
+        $this->assertEquals($state, $definition['collapsed']);
+    }
+
+    public static function showMinItemsProvider(): array
+    {
+        return [
+            'minItemsIsHigherThenAvailableItems' => [3, true],
+            'minItemsIsNotHigherThenAvailableItems' => [2, false],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('showMinItemsProvider')]
+    public function getShowMinItemsWarning(int $minitems, bool $expected): void
+    {
+        $GLOBALS['TCA']['tt_content']['containerConfiguration']['test-container']['grid'][0][0]['minitems'] = $minitems;
+        $containerRecord = $this->getContentRecords('tx_container_parent', 0);
+        $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
+
+        $subject = new BeforeContainerPreviewIsRenderedListener($this->get(PageRenderer::class));
+        $subject->__invoke($event);
+
+        $definition = $event->getGrid()->getColumns()[200]->getDefinition();
+        $this->assertEquals($expected, $definition['showMinItemsWarning']);
     }
 
     #[Test]
