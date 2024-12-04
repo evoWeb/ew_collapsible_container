@@ -102,11 +102,11 @@ runFunctionalTests () {
         -s composerValidate || exit 1 ; \
         EXIT_CODE_VALIDATE=$?
 
-#    ./runTests.sh \
-#        -p ${PHP_VERSION} \
-#        -d sqlite \
-#        -s functional ${TEST_PATH} || exit 1 ; \
-#        EXIT_CODE_FUNCTIONAL=$?
+    ./runTests.sh \
+        -p ${PHP_VERSION} \
+        -d sqlite \
+        -s functional ${TEST_PATH} || exit 1 ; \
+        EXIT_CODE_FUNCTIONAL=$?
 
     echo "###########################################################################" >&2
     echo " Finished unit and/or functional tests with" >&2

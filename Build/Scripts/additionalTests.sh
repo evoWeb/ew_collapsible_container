@@ -430,7 +430,6 @@ additionalCleanTestFiles() {
     rm -rf \
         .cache \
         bin/ \
-        Build/phpunit \
         Build/vendor/ \
         Build/Web/ \
         Documentation-GENERATED-temp/ \

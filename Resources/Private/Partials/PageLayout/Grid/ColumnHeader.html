@@ -39,22 +39,20 @@
 <f:render section="collapsibleExpandIcon" arguments="{_all}"/>
 
 <f:section name="collapsibleToggleIcon">
-    <f:if condition="{collapsable}">
-        <a href="#"
-           class="btn btn-sm btn-default btn-borderless t3js-toggle-container-column"
-           title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:expandcontent')}"
-           data-toggle-title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:collapsecontent')}"
-           data-collapse-state="collapsed">
-            <core:icon identifier="actions-view-list-expand" />
-        </a>
-        <a href="#"
-           class="btn btn-sm btn-default btn-borderless t3js-toggle-container-column"
-           title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:collapsecontent')}"
-           data-toggle-title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:expandcontent')}"
-           data-collapse-state="expanded">
-            <core:icon identifier="actions-view-list-collapse" />
-        </a>
-    </f:if>
+    <a href="#"
+       class="btn btn-sm btn-default btn-borderless t3js-toggle-container-column"
+       title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:expandcontent')}"
+       data-toggle-title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:collapsecontent')}"
+       data-collapse-state="collapsed">
+        <core:icon identifier="actions-view-list-expand" />
+    </a>
+    <a href="#"
+       class="btn btn-sm btn-default btn-borderless t3js-toggle-container-column"
+       title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:collapsecontent')}"
+       data-toggle-title="{f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:expandcontent')}"
+       data-collapse-state="expanded">
+        <core:icon identifier="actions-view-list-collapse" />
+    </a>
 </f:section>
 
 <f:section name="collapsibleMinitemWarning">
@@ -73,14 +71,12 @@
 </f:section>
 
 <f:section name="collapsibleExpandIcon">
-    <f:if condition="{collapsable}">
-        <div class="m-3 container-collapsed-column-marker t3js-expand-column">
-            <button type="button" class="btn btn-default btn-sm me-2">
-                <core:icon identifier="actions-view-list-expand"/>
-            </button>
-            {f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:contentcollapsed')}
-        </div>
-    </f:if>
+    <div class="m-3 container-collapsed-column-marker t3js-expand-column">
+        <button type="button" class="btn btn-default btn-sm me-2">
+            <core:icon identifier="actions-view-list-expand"/>
+        </button>
+        {f:translate(key: 'LLL:EXT:ew_collapsible_container/Resources/Private/Language/locallang.xlf:contentcollapsed')}
+    </div>
 </f:section>
 
 </html>
