@@ -33,7 +33,7 @@ class BeforeContainerPreviewIsRenderedListener
     #[AsEventListener('collapsible-container-beforepreview', BeforeContainerPreviewIsRenderedEvent::class)]
     public function __invoke(BeforeContainerPreviewIsRenderedEvent $event): void
     {
-        $record = $event->getItem()->getRecord();
+        $record = $event->getContainer()->getContainerRecord();
 
         /** @var ContainerGridColumn $column */
         foreach ($event->getGrid()->getColumns() as $column) {
