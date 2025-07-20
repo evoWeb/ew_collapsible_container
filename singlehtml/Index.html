@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
-    <title>Collapsible container 2.2.1
+    <title>Collapsible container 2.2.2
         documentation</title>
 
     
@@ -10,11 +10,11 @@
 <meta content="phpdocumentor/guides" name="generator">
 <meta content="Collapsible container" name="docsearch:name">
 <meta content="" name="docsearch:package_type">
-<meta content="2.2.1" name="docsearch:release">
-<meta content="2.2.1" name="docsearch:version">
-<meta content="2025-02-03T18:44:32+00:00" name="docsearch:modified">
-<meta content="2025-02-03T18:44:32+00:00" name="dc.modified">
-<meta content="2025-02-03T18:44:32+00:00" property="article:modified_time">
+<meta content="2.2.2" name="docsearch:release">
+<meta content="2.2.2" name="docsearch:version">
+<meta content="2025-07-20T13:17:45+00:00" name="docsearch:modified">
+<meta content="2025-07-20T13:17:45+00:00" name="dc.modified">
+<meta content="2025-07-20T13:17:45+00:00" property="article:modified_time">
     <link href="http://purl.org/dc/elements/1.1/" rel="schema.dc">
 <link href="../_resources/css/theme.css" rel="stylesheet">
 <link href="https://docs.typo3.org/search/" rel="search" title="Search">
@@ -33,14 +33,36 @@
     </div>
     <div class="page-header">
         <div class="page-header-inner">
-            <div class="row">
-                <div class="col-md-2 col-lg-4">
+            <div class="d-flex flex-wrap">
+                <div class="logo-wrapper">
                     <a class="logo" href="https://docs.typo3.org/" title="TYPO3 Documentation">
                         <img alt="TYPO3 Logo" class="logo-image" src="../_resources/img/typo3-logo.svg" width="484" height="130">
                     </a>
                 </div>
-                <div class="col-md-10 col-lg-8">
+                <div class="align-self-center order-lg-2 order-last">
+                    
+<div class="toc-header">
+    <div class="toc-title pe-3">
+                            <a class="toc-title-project" href="../Index.html">Container with collapsible columns</a>
+            </div>
+    <label for="languageSelect" class="visually-hidden">Select language</label>
+        <select id="languageSelect" class="form-select d-none">
+        </select>
+
+                                    
+        <label for="versionSelect" class="visually-hidden">Select version</label>
+        <select id="versionSelect" class="form-select"
+                data-current-version="2.2.2"
+            data-override-url-proxy="https://render-guides.ddev.site/_resources/js/versions-proxy.php?url=" data-override-url-self="https://docs.typo3.org/m/typo3/tutorial-getting-started/12.4/en-us/Concepts/Index.html"
+        >
+            <option disabled selected>Loading versions...</option>
+        </select>
+    </div>                </div>
+                <div class="ms-auto order-lg-3 d-flex">
                     <div class="menu-search-wrapper">
+                        <button id="toc-toggle" class="btn btn-light d-block d-lg-none" tabindex="0" aria-controls="toc-collapse" aria-expanded="false">
+                            <i class="fas fa-bars"></i> <span class="visually-hidden">Mobile Menu</span>
+                        </button>
                         <all-documentations-menu data-override-url="https://render-guides.ddev.site/_resources/js/menu-proxy.php"></all-documentations-menu>
                                                 <search role="search">
                             <form action="https://docs.typo3.org/search/search" id="global-search-form" method="get">
@@ -50,11 +72,28 @@
                                         <option value="">Search all</option>
                                     </select>
                                     <input autocomplete="off" class="form-control shadow-none" id="globalsearchinput" name="q" placeholder="TYPO3 documentation..." type="text" value="">
-                                    <button class="btn btn-light search__submit" type="submit"><i class="fa fa-search"></i>&nbsp;<span class="d-none d-md-inline">Search</span></button>
+                                    <button class="btn btn-light" type="submit"><i class="fa fa-search"></i>&nbsp;<span class="d-none d-md-inline">Search</span></button>
                                 </div>
                             </form>
                             <div id="global-search-root"></div>
                         </search>
+                        <div class="position-relative d-inline-block">
+                            <button id="options-toggle" class="btn btn-light d-block" type="button" aria-expanded="false">
+                                <i class="fas fa-cog"></i> <span class="visually-hidden">Options</span>
+                            </button>
+
+                            <div id="options-panel"
+                                 class="shadow p-3"
+                                 role="menu"
+                                 aria-hidden="true">
+                                <h6 class="dropdown-header text-muted text-uppercase small mb-2">Options</h6>
+
+                                                                                                        <a class="dropdown-item d-flex align-items-center gap-2" href="../Index.html" rel="noopener">
+                                        <i class="fas fa-file-alt"></i>
+                                        Switch to regular view
+                                    </a>
+                                                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -64,31 +103,8 @@
         <div class="page-main-inner">
             <div class="page-main-navigation">
                 <nav>
-                    
-<div class="toc-header">
-    <div class="toc-title">
-        <a class="toc-title-project" href="#">Collapsible container</a>
-            <div class="toc-version-wrapper" id="toc-version-wrapper">
-                <!--
-                    LOCAL RENDERING NOTICE:
-                    https://docs.typo3.org/other/t3docs/render-guides/main/en-us/Developer/AjaxVersions.html
-                -->
 
-                <div id="toc-version" class="toc-version" data-override-url-proxy="https://render-guides.ddev.site/_resources/js/versions-proxy.php?url=" data-override-url-self="https://docs.typo3.org/m/typo3/tutorial-getting-started/12.4/en-us/Concepts/Index.html">
-                
-                    <span class="toc-version-prefix">Release:</span>
-                    <span class="toc-version-number" tabindex="0">2.2.1</span>
-                </div>
-                <div id="toc-version-options" class="toc-version-options">
-                    <p><span class="fa fa-spinner fa-spin"></span> Loading data.</p>
-                </div>
-            </div></div>
-    <div class="toc-actions">
-        <button id="toc-toggle" class="btn btn-light d-block d-lg-none" tabindex="0" aria-controls="toc-collapse" aria-expanded="false">
-            Menu
-        </button>
-    </div>
-</div>                    <div id="toc-collapse">
+                    <div id="toc-collapse">
                                                 <div aria-label="main navigation" class="toc"
                              role="navigation">
                                                                                 </div>
@@ -119,7 +135,7 @@
 
         <dd class="field-odd">
             
-    <p>2.2.1</p>
+    <p>2.2.2</p>
         </dd>
             <dt class="field-odd">Language</dt>
 
@@ -145,95 +161,7 @@ license.</p>
 
         <dd class="field-odd">
             
-    <p>Mon, 03 Feb 2025 18:44:32 +0000</p>
-        </dd>
-            <dt class="field-odd">Copyright</dt>
-
-        <dd class="field-odd">
-            
-    <p>2024-2024</p>
-        </dd>
-    </dl>
-            <hr />
-            
-    <p>Adds collapsibility to container columns and directly link
-into record form, if only one child type is allowed</p>
-
-            
-    <p>The content of this document is related to TYPO3,
-a GNU/GPL CMS/Framework available from <a href="http://typo3.org">http://typo3.org</a></p>
-
-            <hr />
-            
-    <p><strong>Table of Contents</strong></p>
-
-            <div class="toctree-wrapper compound">
-        <ul class="menu-level">
-    <li class="toc-item">
-    <a href="#installation-1">Installation</a>
-
-
-</li>
-    <li class="toc-item">
-    <a href="#example-1">Example</a>
-
-
-</li>
-    </ul>
-</div>
-            
-    </section>
-
-        </article>
-<article>
-            
-<section class="section" id="container-with-collapsible-columns" data-rst-anchor="start">
-            <a id="start"></a>
-            <h1>Container with collapsible columns<a class="headerlink" href="#container-with-collapsible-columns" data-bs-toggle="modal" data-bs-target="#linkReferenceModal"  title="Reference this headline"><i class="fa-solid fa-paragraph"></i></a></h1>
-            <dl class="field-list simple ">
-            <dt class="field-odd">Extension key</dt>
-
-        <dd class="field-odd">
-            
-    <p>ew_collapsible_container</p>
-        </dd>
-            <dt class="field-odd">Package name</dt>
-
-        <dd class="field-odd">
-            
-    <p>evoweb/ew-collapsible-container</p>
-        </dd>
-            <dt class="field-odd">Version</dt>
-
-        <dd class="field-odd">
-            
-    <p>2.2.1</p>
-        </dd>
-            <dt class="field-odd">Language</dt>
-
-        <dd class="field-odd">
-            
-    <p>en</p>
-        </dd>
-            <dt class="field-odd">Author</dt>
-
-        <dd class="field-odd">
-            
-    <p>Sebastian Fischer</p>
-        </dd>
-            <dt class="field-odd">License</dt>
-
-        <dd class="field-odd">
-            
-    <p>This document is published under the
-<a href="https://www.opencontent.org/openpub/">Open Publication</a>.
-license.</p>
-        </dd>
-            <dt class="field-odd">Rendered</dt>
-
-        <dd class="field-odd">
-            
-    <p>Mon, 03 Feb 2025 18:44:32 +0000</p>
+    <p>Sun, 20 Jul 2025 13:17:45 +0000</p>
         </dd>
             <dt class="field-odd">Copyright</dt>
 
@@ -442,7 +370,7 @@ GeneralUtility::makeInstance(Registry::class)-&gt;configureContainer($configurat
                                                 <li><a href="https://github.com/evoweb/ew_collapsible_container/issues" rel="nofollow noopener" title="Issues"><span>Issues</span></a></li>
                                                 <li><a href="https://github.com/evoweb/ew_collapsible_container" rel="nofollow noopener" title="Repository"><span>Repository</span></a></li>
                                             </ul>                <div class="footer-additional">
-                    <p class="text-center">Last rendered: Feb 03, 2025 18:44</p>
+                    <p class="text-center">Last rendered: Jul 20, 2025 13:17</p>
                 </div>
                 <div class="footer-meta">
                                         <div class="footer-meta-copyright">

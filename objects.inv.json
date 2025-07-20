@@ -2,25 +2,25 @@
     "std:doc": {
         "Example\/Index": [
             "Collapsible container",
-            "2.2.1",
+            "2.2.2",
             "Example\/Index.html",
             "Example"
         ],
         "Index": [
             "Collapsible container",
-            "2.2.1",
+            "2.2.2",
             "Index.html",
             "Container with collapsible columns"
         ],
         "Installation\/Index": [
             "Collapsible container",
-            "2.2.1",
+            "2.2.2",
             "Installation\/Index.html",
             "Installation"
         ],
         "Sitemap": [
             "Collapsible container",
-            "2.2.1",
+            "2.2.2",
             "Sitemap.html",
             "Sitemap"
         ]
@@ -28,19 +28,19 @@
     "std:label": {
         "example": [
             "Collapsible container",
-            "2.2.1",
+            "2.2.2",
             "Example\/Index.html#example",
             "Example"
         ],
         "start": [
             "Collapsible container",
-            "2.2.1",
+            "2.2.2",
             "Index.html#start",
             "Container with collapsible columns"
         ],
         "installation": [
             "Collapsible container",
-            "2.2.1",
+            "2.2.2",
             "Installation\/Index.html#installation",
             "Installation"
         ]
@@ -48,31 +48,31 @@
     "std:title": {
         "example-1": [
             "Collapsible container",
-            "2.2.1",
+            "2.2.2",
             "Example\/Index.html#example",
             "Example"
         ],
         "container-with-collapsible-columns": [
             "Collapsible container",
-            "2.2.1",
+            "2.2.2",
             "Index.html#start",
             "Container with collapsible columns"
         ],
         "installation-1": [
             "Collapsible container",
-            "2.2.1",
+            "2.2.2",
             "Installation\/Index.html#installation",
             "Installation"
         ],
         "installation-via-composer": [
             "Collapsible container",
-            "2.2.1",
+            "2.2.2",
             "Installation\/Index.html#installation-via-composer",
             "Installation via Composer"
         ],
         "sitemap": [
             "Collapsible container",
-            "2.2.1",
+            "2.2.2",
             "Sitemap.html#sitemap",
             "Sitemap"
         ]
