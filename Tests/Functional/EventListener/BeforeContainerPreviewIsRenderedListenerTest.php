@@ -19,10 +19,10 @@ use B13\Container\Backend\Grid\ContainerGridColumn;
 use B13\Container\Backend\Grid\ContainerGridColumnItem;
 use B13\Container\Domain\Factory\Database;
 use B13\Container\Domain\Model\Container;
+use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
 use B13\Container\Tca\ContainerConfiguration;
 use B13\Container\Tca\Registry;
 use Evoweb\EwCollapsibleContainer\EventListener\BeforeContainerPreviewIsRenderedListener;
-use Evoweb\EwCollapsibleContainer\Xclass\BeforeContainerPreviewIsRenderedEvent;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ServerRequestInterface;
@@ -204,19 +204,10 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
             $grid->addRow($rowObject);
         }
 
-        if (class_exists(StandaloneView::class)) {
-            /** @var StandaloneView $view */
-            $view = $this->getMockBuilder(StandaloneView::class)
-                ->disableOriginalConstructor()
-                ->getMock();
-
-            return new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $item);
-        } else {
-            $viewFactoryData = new ViewFactoryData();
-            $viewFactory = $this->get(FluidViewFactory::class);
-            $view = $viewFactory->create($viewFactoryData);
-            return new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $item);
-        }
+        $viewFactoryData = new ViewFactoryData();
+        $viewFactory = $this->get(FluidViewFactory::class);
+        $view = $viewFactory->create($viewFactoryData);
+        return new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $item);
     }
 
     #[Test]
