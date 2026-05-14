@@ -22,8 +22,6 @@ use Evoweb\EwCollapsibleContainer\Xclass\ContainerGridColumn;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
-use TYPO3\CMS\Core\Page\PageRenderer;
 
 class BeforeContainerPreviewIsRenderedListener
 {
@@ -47,7 +45,7 @@ class BeforeContainerPreviewIsRenderedListener
             $column->setOverride([
                 'countOfHiddenItems' => $countOfHiddenItems,
                 'collapsed' => $this->getColumnCollapsed((int)$record['uid'], $column),
-                'showMinItemsWarning' => $this->getShowMinItemsWarning($column, $countOfHiddenItems)
+                'showMinItemsWarning' => $this->getShowMinItemsWarning($column, $countOfHiddenItems),
             ]);
         }
     }

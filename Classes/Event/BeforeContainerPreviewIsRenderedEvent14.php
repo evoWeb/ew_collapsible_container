@@ -19,14 +19,13 @@ use B13\Container\Domain\Model\Container;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
 use TYPO3\CMS\Core\View\ViewInterface;
 
-final class BeforeContainerPreviewIsRenderedEvent14
+final readonly class BeforeContainerPreviewIsRenderedEvent14
 {
     public function __construct(
-        protected Container $container,
-        protected ViewInterface $view,
-        protected Grid $grid
-    ) {
-    }
+        private Container $container,
+        private ViewInterface $view,
+        private Grid $grid
+    ) {}
 
     public function getContainer(): Container
     {

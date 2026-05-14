@@ -53,7 +53,6 @@ use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Fluid\View\FluidViewFactory;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
@@ -91,8 +90,8 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
                         'allowed' => [
                             'CType' => 'test-child',
                         ],
-                    ]
-                ]
+                    ],
+                ],
             ]
         );
 
@@ -207,6 +206,7 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         }
 
         $viewFactoryData = new ViewFactoryData();
+        /** @var FluidViewFactory $viewFactory */
         $viewFactory = $this->get(FluidViewFactory::class);
         $view = $viewFactory->create($viewFactoryData);
         if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
@@ -223,19 +223,22 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         $containerRecord = $this->getContentRecords('tx_container_parent', 0);
         $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
 
-        $subject = new BeforeContainerPreviewIsRenderedListener($this->get(PageRenderer::class));
-        $subject->__invoke($event);
+        $subject = new BeforeContainerPreviewIsRenderedListener();
+        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
+            $subject->processPre14($event);
+        } else {
+            $subject->processFor14($event);
+        }
 
         $definition = $event->getGrid()->getColumns()[200]->getDefinition();
-        $this->assertEquals(1, $definition['countOfHiddenItems']);
+        self::assertEquals(1, $definition['countOfHiddenItems']);
     }
 
-    public static function getCollapsedProvider(): array
+    public static function getCollapsedProvider(): iterable
     {
-        return [
-            'falseIsDefault' => [ false ],
-            'trueIsDefault' => [ true ],
-        ];
+        yield 'falseIsDefault' => [false];
+
+        yield 'trueIsDefault' => [true];
     }
 
     #[Test]
@@ -245,35 +248,6 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         $GLOBALS['TCA']['tt_content']['containerConfiguration']['test-container']['grid'][0][0]['collapsed'] = $state;
         $containerRecord = $this->getContentRecords('tx_container_parent', 0);
         $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
-        if ($event === null) {
-            $this->markTestSkipped('StandaloneView is not available');
-        }
-
-        $subject = new BeforeContainerPreviewIsRenderedListener($this->get(PageRenderer::class));
-        $subject->__invoke($event);
-
-        $definition = $event->getGrid()->getColumns()[200]->getDefinition();
-        $this->assertEquals($state, $definition['collapsed']);
-    }
-
-    public static function showMinItemsProvider(): array
-    {
-        return [
-            'minItemsIsHigherThenAvailableItems' => [3, true],
-            'minItemsIsNotHigherThenAvailableItems' => [2, false],
-        ];
-    }
-
-    #[Test]
-    #[DataProvider('showMinItemsProvider')]
-    public function getShowMinItemsWarning(int $minitems, bool $expected): void
-    {
-        $GLOBALS['TCA']['tt_content']['containerConfiguration']['test-container']['grid'][0][0]['minitems'] = $minitems;
-        $containerRecord = $this->getContentRecords('tx_container_parent', 0);
-        $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
-        if ($event === null) {
-            $this->markTestSkipped('StandaloneView is not available');
-        }
 
         $subject = new BeforeContainerPreviewIsRenderedListener();
         if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
@@ -283,7 +257,33 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         }
 
         $definition = $event->getGrid()->getColumns()[200]->getDefinition();
-        $this->assertEquals($expected, $definition['showMinItemsWarning']);
+        self::assertEquals($state, $definition['collapsed']);
+    }
+
+    public static function showMinItemsProvider(): iterable
+    {
+        yield 'minItemsIsHigherThenAvailableItems' => [3, true];
+
+        yield 'minItemsIsNotHigherThenAvailableItems' => [2, false];
+    }
+
+    #[Test]
+    #[DataProvider('showMinItemsProvider')]
+    public function getShowMinItemsWarning(int $minitems, bool $expected): void
+    {
+        $GLOBALS['TCA']['tt_content']['containerConfiguration']['test-container']['grid'][0][0]['minitems'] = $minitems;
+        $containerRecord = $this->getContentRecords('tx_container_parent', 0);
+        $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
+
+        $subject = new BeforeContainerPreviewIsRenderedListener();
+        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
+            $subject->processPre14($event);
+        } else {
+            $subject->processFor14($event);
+        }
+
+        $definition = $event->getGrid()->getColumns()[200]->getDefinition();
+        self::assertEquals($expected, $definition['showMinItemsWarning']);
     }
 
     #[Test]
@@ -291,47 +291,44 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
     {
         $containerRecord = $this->getContentRecords('tx_container_parent', 0);
         $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
-        if ($event === null) {
-            $this->markTestSkipped('StandaloneView is not available');
-        }
 
         /** @var PageRenderer $pageRenderer */
         $pageRenderer = $this->get(PageRenderer::class);
 
-        $subject = new BeforeContainerPreviewIsRenderedListener($pageRenderer);
-        $subject->__invoke($event);
+        $subject = new BeforeContainerPreviewIsRenderedListener();
+        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
+            $subject->processPre14($event);
+        } else {
+            $subject->processFor14($event);
+        }
 
         $reflectedClass = new \ReflectionClass($pageRenderer);
         $property = $reflectedClass->getProperty('cssFiles');
 
-        $arrayValuesHasSubstring = 0 < count(
+        $arrayValuesHasSubstring = count(
             array_filter(
                 $property->getValue($pageRenderer),
                 function ($value) {
                     return str_contains($value['file'], 'Resources/Public/Css/container.css');
                 }
             )
-        );
+        ) > 0;
 
-        $this->assertTrue($arrayValuesHasSubstring);
+        self::assertTrue($arrayValuesHasSubstring);
 
         $moduleName = '@evoweb/ew-collapsible-container/container.js';
         $javascriptInstruction = array_map(
-            fn (array $item) => $item['payload']->getName() === $moduleName ? $moduleName : '',
+            fn(array $item) => $item['payload']->getName() === $moduleName ? $moduleName : '',
             $pageRenderer->getJavaScriptRenderer()->toArray()
         );
 
-        $this->assertContains($moduleName, $javascriptInstruction);
+        self::assertContains($moduleName, $javascriptInstruction);
     }
 
     private function getPageContext(ServerRequestInterface $request): PageContext
     {
         $pageContextFactory = $this->get(PageContextFactory::class);
-        return $pageContextFactory->createFromRequest(
-            $request,
-            1,
-            $this->backendUser
-        );
+        return $pageContextFactory->createFromRequest($request, 1, $this->backendUser);
     }
 
     private function getReuqest(): ServerRequestInterface

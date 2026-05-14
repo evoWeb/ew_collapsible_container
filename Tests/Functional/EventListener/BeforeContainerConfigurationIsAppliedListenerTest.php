@@ -37,7 +37,7 @@ class BeforeContainerConfigurationIsAppliedListenerTest extends FunctionalTestCa
         $subject = new BeforeContainerConfigurationIsAppliedListener();
         $subject->__invoke($event);
 
-        $this->assertContains(
+        self::assertContains(
             'EXT:ew_collapsible_container/Resources/Private/Partials/',
             $event->getContainerConfiguration()->getGridPartialPaths()
         );

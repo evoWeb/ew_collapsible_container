@@ -81,7 +81,7 @@ class ContainerGridColumnTest extends FunctionalTestCase
             'showMinItemsWarning' => false,
         ]);
 
-        $this->assertArrayHasKey('countOfHiddenItems', $subject->getDefinition());
+        self::assertArrayHasKey('countOfHiddenItems', $subject->getDefinition());
     }
 
     private function getPageContext(ServerRequestInterface $request): PageContext
