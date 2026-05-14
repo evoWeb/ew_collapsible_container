@@ -22,6 +22,7 @@ use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Domain\RecordInterface;
 
 class BeforeContainerPreviewIsRenderedListener
 {
@@ -59,9 +60,9 @@ class BeforeContainerPreviewIsRenderedListener
             array_filter(
                 iterator_to_array($columnObject->getItems()),
                 function (GridColumnItem $item) {
-                    $record = $item->getRecord()->getRawRecord();
-                    $hidden = $record?->has('hidden') ? $record->get('hidden') : 0;
-                    return $hidden > 0;
+                    $record = $item->getRecord();
+                    $record = $record instanceof RecordInterface ? $record->getRawRecord()->toArray() : $record;
+                    return $record['hidden'] > 0;
                 }
             )
         );

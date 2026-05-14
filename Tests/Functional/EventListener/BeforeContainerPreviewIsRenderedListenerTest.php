@@ -50,6 +50,7 @@ use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Fluid\View\FluidViewFactory;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
@@ -214,13 +215,17 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
             $grid->addRow($rowObject);
         }
 
-        /** @var FluidViewFactory $viewFactory */
-        $viewFactory = $this->get(FluidViewFactory::class);
-        $view = $viewFactory->create(new ViewFactoryData());
         if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
+            /** @var StandaloneView $view */
+            $view = $this->getMockBuilder(StandaloneView::class)
+                ->disableOriginalConstructor()
+                ->getMock();
             // @phpstan-ignore argument.type
             $event = new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $item);
         } else {
+            /** @var FluidViewFactory $viewFactory */
+            $viewFactory = $this->get(FluidViewFactory::class);
+            $view = $viewFactory->create(new ViewFactoryData());
             $event = new BeforeContainerPreviewIsRenderedEvent14($container, $view, $grid);
         }
         return $event;
