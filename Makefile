@@ -30,7 +30,22 @@ cleanup: ##@ Cleanup
 
 .PHONY: functional-test
 functional-test: ##@ Run functional tests
+	echo "Functional tests started"
 	Build/Scripts/runTests.sh -x -p ${PHP_VERSION} -d sqlite -s functional Tests/Functional
+	echo "Functional tests finished"
+
+.PHONY: phpstan
+phpstan: ##@ Run functional tests
+	echo "Checking with phpstan started"
+	Build/Scripts/runTests.sh -s phpstan
+	echo "Checking with phpstan finished"
+
+
+.PHONY: cgl
+cgl: ##@ Coding guideline check with
+	echo "Coding guideline check with phpstan started"
+	Build/Scripts//runTests.sh -p ${PHP_VERSION} -s cgl -n
+	echo "Coding guideline check with phpstan finished"
 
 
 help:
