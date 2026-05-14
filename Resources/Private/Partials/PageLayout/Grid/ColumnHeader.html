@@ -2,6 +2,9 @@
       xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
       data-namespace-typo3-fluid="true">
 
+<f:asset.css identifier="collapsible-css" href="EXT:ew_collapsible_container/Resources/Public/Css/container.css"/>
+<f:asset.module identifier="@evoweb/ew-collapsible-container/container.js"/>
+
 {columnHeaderLevel -> f:or(alternative: 2) -> f:variable(name: 'columnHeaderLevel')}
 
 <div class="t3-page-column-header">

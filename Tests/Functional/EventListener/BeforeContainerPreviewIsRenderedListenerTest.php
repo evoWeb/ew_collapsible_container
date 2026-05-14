@@ -22,6 +22,7 @@ use B13\Container\Domain\Model\Container;
 use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
 use B13\Container\Tca\ContainerConfiguration;
 use B13\Container\Tca\Registry;
+use Evoweb\EwCollapsibleContainer\Event\BeforeContainerPreviewIsRenderedEvent14;
 use Evoweb\EwCollapsibleContainer\EventListener\BeforeContainerPreviewIsRenderedListener;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -45,6 +46,7 @@ use TYPO3\CMS\Core\Domain\Record\ComputedProperties;
 use TYPO3\CMS\Core\Domain\RecordInterface;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Site\Entity\Site;
@@ -125,7 +127,7 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
 
     protected function getBeforeContainerPreviewIsRenderedEvent(
         RecordInterface $record
-    ): BeforeContainerPreviewIsRenderedEvent {
+    ): BeforeContainerPreviewIsRenderedEvent|BeforeContainerPreviewIsRenderedEvent14 {
         $request = $this->getReuqest();
         if (class_exists(PageContext::class)) {
             $pageContext = $this->getPageContext($request);
@@ -207,7 +209,12 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         $viewFactoryData = new ViewFactoryData();
         $viewFactory = $this->get(FluidViewFactory::class);
         $view = $viewFactory->create($viewFactoryData);
-        return new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $item);
+        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
+            $event = new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $item);
+        } else {
+            $event = new BeforeContainerPreviewIsRenderedEvent14($container, $view, $grid);
+        }
+        return $event;
     }
 
     #[Test]
@@ -268,8 +275,12 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
             $this->markTestSkipped('StandaloneView is not available');
         }
 
-        $subject = new BeforeContainerPreviewIsRenderedListener($this->get(PageRenderer::class));
-        $subject->__invoke($event);
+        $subject = new BeforeContainerPreviewIsRenderedListener();
+        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
+            $subject->processPre14($event);
+        } else {
+            $subject->processFor14($event);
+        }
 
         $definition = $event->getGrid()->getColumns()[200]->getDefinition();
         $this->assertEquals($expected, $definition['showMinItemsWarning']);

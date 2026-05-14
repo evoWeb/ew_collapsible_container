@@ -17,7 +17,9 @@ namespace Evoweb\EwCollapsibleContainer\EventListener;
 
 use B13\Container\Backend\Grid\ContainerGridColumnItem;
 use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
+use Evoweb\EwCollapsibleContainer\Event\BeforeContainerPreviewIsRenderedEvent14;
 use Evoweb\EwCollapsibleContainer\Xclass\ContainerGridColumn;
+use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
@@ -25,17 +27,22 @@ use TYPO3\CMS\Core\Page\PageRenderer;
 
 class BeforeContainerPreviewIsRenderedListener
 {
-    public function __construct(protected PageRenderer $pageRenderer)
+    #[AsEventListener('collapsible-container-beforepreview')]
+    public function processPre14(BeforeContainerPreviewIsRenderedEvent $event): void
     {
+        $this->processGridColumns($event->getContainer()->getContainerRecord(), $event->getGrid());
     }
 
-    #[AsEventListener('collapsible-container-beforepreview', BeforeContainerPreviewIsRenderedEvent::class)]
-    public function __invoke(BeforeContainerPreviewIsRenderedEvent $event): void
+    #[AsEventListener('collapsible-container-beforepreview14')]
+    public function processFor14(BeforeContainerPreviewIsRenderedEvent14 $event): void
     {
-        $record = $event->getContainer()->getContainerRecord();
+        $this->processGridColumns($event->getContainer()->getContainerRecord(), $event->getGrid());
+    }
 
+    protected function processGridColumns(array $record, Grid $grid): void
+    {
         /** @var ContainerGridColumn $column */
-        foreach ($event->getGrid()->getColumns() as $column) {
+        foreach ($grid->getColumns() as $column) {
             $countOfHiddenItems = $this->getCountOfHiddenItems($column);
             $column->setOverride([
                 'countOfHiddenItems' => $countOfHiddenItems,
@@ -43,8 +50,6 @@ class BeforeContainerPreviewIsRenderedListener
                 'showMinItemsWarning' => $this->getShowMinItemsWarning($column, $countOfHiddenItems)
             ]);
         }
-
-        $this->addFrontendResources();
     }
 
     protected function getCountOfHiddenItems(ContainerGridColumn $columnObject): int
@@ -78,14 +83,6 @@ class BeforeContainerPreviewIsRenderedListener
         $itemCount = count($columnObject->getItems());
         $minItems = (int)($columnObject->getDefinition()['minitems'] ?? 0);
         return $itemCount > 0 && ($itemCount - $hiddenItemCount) < $minItems;
-    }
-
-    protected function addFrontendResources(): void
-    {
-        $this->pageRenderer->addCssFile('EXT:ew_collapsible_container/Resources/Public/Css/container.css');
-        $this->pageRenderer->getJavaScriptRenderer()->addJavaScriptModuleInstruction(
-            JavaScriptModuleInstruction::create('@evoweb/ew-collapsible-container/container.js')
-        );
     }
 
     protected function getBackendUser(): BackendUserAuthentication
