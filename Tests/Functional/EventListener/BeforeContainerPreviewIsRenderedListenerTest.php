@@ -73,7 +73,9 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/tt_content.csv');
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/be_users.csv');
         $this->backendUser = $this->setUpBackendUser(1);
-        $GLOBALS['LANG'] = $this->get(LanguageServiceFactory::class)->createFromUserPreferences($this->backendUser);
+        /** @var LanguageServiceFactory $languageServiceFactory */
+        $languageServiceFactory = $this->get(LanguageServiceFactory::class);
+        $GLOBALS['LANG'] = $languageServiceFactory->createFromUserPreferences($this->backendUser);
     }
 
     protected function configureTCA(): void
@@ -98,15 +100,20 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         $configuration->setGroup('ew_fischer');
         $configuration->setIcon('content-card-group');
 
-        $this->get(Registry::class)->configureContainer($configuration);
+        /** @var Registry $registry */
+        $registry = $this->get(Registry::class);
+        $registry->configureContainer($configuration);
 
-        $GLOBALS['TCA']['tt_content']['ctrl']['typeicon_classes']['test-container'] = 'content-card-group';
+        /** @var array<string, array<string, array<string, array<string, string>>>> $tca */
+        $tca = $GLOBALS['TCA'];
+        $tca['tt_content']['ctrl']['typeicon_classes']['test-container'] = 'content-card-group';
     }
 
-    protected function getContentRecords(string $field, int $uid): array|RecordInterface
+    protected function getContentRecords(string $field, int $uid): RecordInterface
     {
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = $this->get(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
+        /** @var ConnectionPool $connectionPool */
+        $connectionPool = $this->get(ConnectionPool::class);
+        $queryBuilder = $connectionPool->getQueryBuilderForTable('tt_content');
         $queryBuilder->getRestrictions()->removeAll();
         $record = $queryBuilder
             ->select('*')
@@ -137,10 +144,15 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
                 $request,
             );
         } else {
+            // v13.4 PageLayoutContext has different signature
+            // @phpstan-ignore arguments.count
             $context = new PageLayoutContext(
+                // @phpstan-ignore argument.type
                 [],
                 new BackendLayout('', '', []),
+                // @phpstan-ignore argument.type
                 new Site('test', 1, []),
+                // @phpstan-ignore argument.type
                 new DrawingConfiguration(),
                 $request,
             );
@@ -210,6 +222,7 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         $viewFactory = $this->get(FluidViewFactory::class);
         $view = $viewFactory->create($viewFactoryData);
         if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
+            // @phpstan-ignore argument.type
             $event = new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $item);
         } else {
             $event = new BeforeContainerPreviewIsRenderedEvent14($container, $view, $grid);
@@ -234,6 +247,9 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         self::assertEquals(1, $definition['countOfHiddenItems']);
     }
 
+    /**
+     * @return iterable<string, array{bool}>
+     */
     public static function getCollapsedProvider(): iterable
     {
         yield 'falseIsDefault' => [false];
@@ -260,6 +276,9 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         self::assertEquals($state, $definition['collapsed']);
     }
 
+    /**
+     * @return iterable<string, array{bool|int}>
+     */
     public static function showMinItemsProvider(): iterable
     {
         yield 'minItemsIsHigherThenAvailableItems' => [3, true];

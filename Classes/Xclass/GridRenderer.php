@@ -14,18 +14,13 @@ namespace Evoweb\EwCollapsibleContainer\Xclass;
 
 use B13\Container\Backend\Grid\ContainerGridColumn;
 use B13\Container\Backend\Grid\ContainerGridColumnItem;
-use B13\Container\Backend\Service\NewContentUrlBuilder;
 use B13\Container\Domain\Factory\Exception;
-use B13\Container\Domain\Factory\PageView\Backend\ContainerFactory;
 use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
-use B13\Container\Tca\Registry;
 use Evoweb\EwCollapsibleContainer\Event\BeforeContainerPreviewIsRenderedEvent14;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridRow;
 use TYPO3\CMS\Backend\View\PageLayoutContext;
-use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
@@ -34,26 +29,6 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class GridRenderer extends \B13\Container\Backend\Preview\GridRenderer
 {
-    protected Registry $tcaRegistry;
-    protected ContainerFactory $containerFactory;
-    protected NewContentUrlBuilder $newContentUrlBuilder;
-    protected EventDispatcherInterface $eventDispatcher;
-    protected FrontendInterface $runtimeCache;
-
-    public function __construct(
-        Registry $tcaRegistry,
-        ContainerFactory $containerFactory,
-        NewContentUrlBuilder $newContentUrlBuilder,
-        EventDispatcherInterface $eventDispatcher,
-        FrontendInterface $runtimeCache
-    ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->tcaRegistry = $tcaRegistry;
-        $this->containerFactory = $containerFactory;
-        $this->newContentUrlBuilder = $newContentUrlBuilder;
-        $this->runtimeCache = $runtimeCache;
-    }
-
     public function renderGrid(array $record, PageLayoutContext $context): string
     {
         $grid = GeneralUtility::makeInstance(Grid::class, $context);

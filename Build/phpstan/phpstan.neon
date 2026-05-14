@@ -5,7 +5,7 @@ parameters:
   # Use local .cache dir instead of /tmp
   tmpDir: ../.cache/phpstan
 
-  level: 6
+  level: 9
 
   bootstrapFiles:
     - phpstan-constants.php
@@ -18,3 +18,5 @@ parameters:
     analyseAndScan:
       # ext_emconf.php get the $_EXTKEY set from outside. We'll ignore all of them
       - ../../ext_emconf.php
+      # ignored to keep code aligned with the base class
+      - ../../Classes/Xclass/GridRenderer.php

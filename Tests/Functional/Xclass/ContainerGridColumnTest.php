@@ -42,7 +42,9 @@ class ContainerGridColumnTest extends FunctionalTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/be_users.csv');
         $this->backendUser = $this->setUpBackendUser(1);
-        $GLOBALS['LANG'] = $this->get(LanguageServiceFactory::class)->createFromUserPreferences($this->backendUser);
+        /** @var LanguageServiceFactory $languageServiceFactory */
+        $languageServiceFactory = $this->get(LanguageServiceFactory::class);
+        $GLOBALS['LANG'] = $languageServiceFactory->createFromUserPreferences($this->backendUser);
 
         $request = $this->getReuqest();
         if (class_exists(PageContext::class)) {
@@ -54,10 +56,15 @@ class ContainerGridColumnTest extends FunctionalTestCase
                 $request,
             );
         } else {
+            // v13.4 PageLayoutContext has different signature
+            // @phpstan-ignore arguments.count
             $pageLayoutContext = new PageLayoutContext(
+                // @phpstan-ignore argument.type
                 [],
                 new BackendLayout('', '', []),
+                // @phpstan-ignore argument.type
                 new Site('test', 1, []),
+                // @phpstan-ignore argument.type
                 new DrawingConfiguration(),
                 $request
             );
@@ -86,6 +93,7 @@ class ContainerGridColumnTest extends FunctionalTestCase
 
     private function getPageContext(ServerRequestInterface $request): PageContext
     {
+        /** @var PageContextFactory $pageContextFactory */
         $pageContextFactory = $this->get(PageContextFactory::class);
         return $pageContextFactory->createFromRequest(
             $request,

@@ -15,11 +15,11 @@ declare(strict_types=1);
 
 namespace Evoweb\EwCollapsibleContainer\EventListener;
 
-use B13\Container\Backend\Grid\ContainerGridColumnItem;
 use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
 use Evoweb\EwCollapsibleContainer\Event\BeforeContainerPreviewIsRenderedEvent14;
 use Evoweb\EwCollapsibleContainer\Xclass\ContainerGridColumn;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
+use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 
@@ -37,6 +37,9 @@ class BeforeContainerPreviewIsRenderedListener
         $this->processGridColumns($event->getContainer()->getContainerRecord(), $event->getGrid());
     }
 
+    /**
+     * @param array<string, string|int|null|float> $record
+     */
     protected function processGridColumns(array $record, Grid $grid): void
     {
         /** @var ContainerGridColumn $column */
@@ -54,10 +57,10 @@ class BeforeContainerPreviewIsRenderedListener
     {
         return count(
             array_filter(
-                $columnObject->getItems(),
-                function (ContainerGridColumnItem $item) {
+                iterator_to_array($columnObject->getItems()),
+                function (GridColumnItem $item) {
                     $record = $item->getRecord()->getRawRecord();
-                    $hidden = $record->has('hidden') ? $record->get('hidden') : 0;
+                    $hidden = $record?->has('hidden') ? $record->get('hidden') : 0;
                     return $hidden > 0;
                 }
             )
@@ -78,13 +81,15 @@ class BeforeContainerPreviewIsRenderedListener
 
     protected function getShowMinItemsWarning(ContainerGridColumn $columnObject, int $hiddenItemCount): bool
     {
-        $itemCount = count($columnObject->getItems());
+        $itemCount = count(iterator_to_array($columnObject->getItems()));
         $minItems = (int)($columnObject->getDefinition()['minitems'] ?? 0);
         return $itemCount > 0 && ($itemCount - $hiddenItemCount) < $minItems;
     }
 
     protected function getBackendUser(): BackendUserAuthentication
     {
-        return $GLOBALS['BE_USER'];
+        /** @var BackendUserAuthentication $user */
+        $user = $GLOBALS['BE_USER'];
+        return $user;
     }
 }

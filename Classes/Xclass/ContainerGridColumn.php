@@ -19,15 +19,25 @@ use B13\Container\Backend\Grid\ContainerGridColumn as BaseContainerGridColumn;
 
 class ContainerGridColumn extends BaseContainerGridColumn
 {
+    /**
+     * @var array<string, int|bool>
+     */
     protected array $override = [];
 
+    /**
+     * @param array<string, int|bool> $override
+     */
     public function setOverride(array $override): void
     {
         $this->override = $override;
     }
 
+    /**
+     * @return array<string, int|bool>
+     */
     public function getDefinition(): array
     {
+        // @phpstan-ignore return.type
         return array_merge($this->definition, $this->override);
     }
 }
