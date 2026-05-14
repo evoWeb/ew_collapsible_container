@@ -53,7 +53,7 @@ class PartialRenderingTest extends FunctionalTestCase
     }
 
     #[Test]
-    public function addFrontendResourcesAddJavascriptAndStylesheets(): void
+    public function templateRenderingAddsJavascriptModuleAndStylesheet(): void
     {
         $this->renderPartial();
 
