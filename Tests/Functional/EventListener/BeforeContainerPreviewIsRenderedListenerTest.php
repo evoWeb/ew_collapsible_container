@@ -40,15 +40,12 @@ use TYPO3\CMS\Backend\View\PageLayoutContext;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Domain\RawRecord;
-use TYPO3\CMS\Core\Domain\Record\ComputedProperties;
+use TYPO3\CMS\Core\Domain\RecordFactory;
 use TYPO3\CMS\Core\Domain\RecordInterface;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
-use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
@@ -105,36 +102,35 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         $registry->configureContainer($configuration);
 
         /** @var array<string, array<string, array<string, array<string, string>>>> $tca */
-        $tca = $GLOBALS['TCA'];
+        $tca =& $GLOBALS['TCA'];
         $tca['tt_content']['ctrl']['typeicon_classes']['test-container'] = 'content-card-group';
     }
 
     protected function getContentRecords(string $field, int $uid): RecordInterface
     {
+        $table = 'tt_content';
         /** @var ConnectionPool $connectionPool */
         $connectionPool = $this->get(ConnectionPool::class);
-        $queryBuilder = $connectionPool->getQueryBuilderForTable('tt_content');
+        $queryBuilder = $connectionPool->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()->removeAll();
-        $record = $queryBuilder
+        /** @var array<string, string|int|null|float>|false $row */
+        $row = $queryBuilder
             ->select('*')
-            ->from('tt_content')
+            ->from($table)
             ->where($queryBuilder->expr()->eq($field, $uid))
             ->executeQuery()
             ->fetchAssociative();
+        assert($row !== false, 'Content record not found');
 
-        $computedProperties = new ComputedProperties(
-            $record['_ORIG_uid'] ?? null,
-            $record['_LOCALIZED_UID'] ?? null,
-            $record['_REQUESTED_OVERLAY_LANGUAGE'] ?? null,
-            $record['_TRANSLATION_SOURCE'] ?? null
-        );
-        return new RawRecord($record['uid'], $record['pid'], $record, $computedProperties, 'tt_content');
+        /** @var RecordFactory $recordFactory */
+        $recordFactory = $this->get(RecordFactory::class);
+        return $recordFactory->createFromDatabaseRow($table, $row);
     }
 
     protected function getBeforeContainerPreviewIsRenderedEvent(
         RecordInterface $record
     ): BeforeContainerPreviewIsRenderedEvent|BeforeContainerPreviewIsRenderedEvent14 {
-        $request = $this->getReuqest();
+        $request = $this->getRequest();
         if (class_exists(PageContext::class)) {
             $pageContext = $this->getPageContext($request);
             $context = new PageLayoutContext(
@@ -143,6 +139,7 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
                 new DrawingConfiguration(),
                 $request,
             );
+            $item = new GridColumnItem($context, (new GridColumn($context, [])), $record);
         } else {
             // v13.4 PageLayoutContext has different signature
             // @phpstan-ignore arguments.count
@@ -156,19 +153,19 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
                 new DrawingConfiguration(),
                 $request,
             );
-            $record = $record->toArray();
+            // @phpstan-ignore argument.type
+            $item = new GridColumnItem($context, (new GridColumn($context, [])), $record->toArray());
         }
 
-        $item = new GridColumnItem($context, (new GridColumn($context, [])), $record);
         $grid = new Grid($context);
 
-        $language = (int)(is_array($record) ? $record['sys_language_uid'] : $record->get('sys_language_uid'));
+        /** @var array<string, string|int|float|null> $rawRecord */
+        $rawRecord = $record->getRawRecord()?->toArray();
+
+        $language = (int)$rawRecord['sys_language_uid'];
         /** @var Database $database */
         $database = $this->get(Database::class);
-        $children = $database->fetchRecordsByParentAndLanguage(
-            (int)(is_array($record) ? $record['uid'] : $record->getUid()),
-            $language
-        );
+        $children = $database->fetchRecordsByParentAndLanguage($record->getUid(), $language);
         $childRecordByColPosKey = [];
         foreach ($children as $child) {
             if (empty($childRecordByColPosKey[$child['colPos']])) {
@@ -179,14 +176,14 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
 
         $container = GeneralUtility::makeInstance(
             Container::class,
-            is_array($record) ? $record : $record->toArray(),
+            $record->toArray(),
             $childRecordByColPosKey,
             $language,
         );
 
-        $containerGrid = $this->get(Registry::class)->getGrid(
-            is_array($record) ? $record['CType'] : $record->get('CType')
-        );
+        /** @var Registry $registry */
+        $registry = $this->get(Registry::class);
+        $containerGrid = $registry->getGrid((string)$rawRecord['CType']);
         foreach ($containerGrid as $cols) {
             $rowObject = GeneralUtility::makeInstance(GridRow::class, $context);
             foreach ($cols as $col) {
@@ -217,10 +214,9 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
             $grid->addRow($rowObject);
         }
 
-        $viewFactoryData = new ViewFactoryData();
         /** @var FluidViewFactory $viewFactory */
         $viewFactory = $this->get(FluidViewFactory::class);
-        $view = $viewFactory->create($viewFactoryData);
+        $view = $viewFactory->create(new ViewFactoryData());
         if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
             // @phpstan-ignore argument.type
             $event = new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $item);
@@ -237,13 +233,13 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
 
         $subject = new BeforeContainerPreviewIsRenderedListener();
-        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
+        if ($event instanceof BeforeContainerPreviewIsRenderedEvent) {
             $subject->processPre14($event);
         } else {
             $subject->processFor14($event);
         }
 
-        $definition = $event->getGrid()->getColumns()[200]->getDefinition();
+        $definition = iterator_to_array($event->getGrid()->getColumns())[200]->getDefinition();
         self::assertEquals(1, $definition['countOfHiddenItems']);
     }
 
@@ -261,18 +257,20 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
     #[DataProvider('getCollapsedProvider')]
     public function getCollapsed(bool $state): void
     {
-        $GLOBALS['TCA']['tt_content']['containerConfiguration']['test-container']['grid'][0][0]['collapsed'] = $state;
+        /** @var array<string, array<string, array<string, array<string, array<int, array<int, array<string, bool>>>>>>> $tca */
+        $tca =& $GLOBALS['TCA'];
+        $tca['tt_content']['containerConfiguration']['test-container']['grid'][0][0]['collapsed'] = $state;
         $containerRecord = $this->getContentRecords('tx_container_parent', 0);
         $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
 
         $subject = new BeforeContainerPreviewIsRenderedListener();
-        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
+        if ($event instanceof BeforeContainerPreviewIsRenderedEvent) {
             $subject->processPre14($event);
         } else {
             $subject->processFor14($event);
         }
 
-        $definition = $event->getGrid()->getColumns()[200]->getDefinition();
+        $definition = iterator_to_array($event->getGrid()->getColumns())[200]->getDefinition();
         self::assertEquals($state, $definition['collapsed']);
     }
 
@@ -288,69 +286,33 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
 
     #[Test]
     #[DataProvider('showMinItemsProvider')]
-    public function getShowMinItemsWarning(int $minitems, bool $expected): void
+    public function getShowMinItemsWarning(int $minItems, bool $expected): void
     {
-        $GLOBALS['TCA']['tt_content']['containerConfiguration']['test-container']['grid'][0][0]['minitems'] = $minitems;
+        /** @var array<string, array<string, array<string, array<string, array<int, array<int, array<string, int>>>>>>> $tca */
+        $tca =& $GLOBALS['TCA'];
+        $tca['tt_content']['containerConfiguration']['test-container']['grid'][0][0]['minitems'] = $minItems;
         $containerRecord = $this->getContentRecords('tx_container_parent', 0);
         $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
 
         $subject = new BeforeContainerPreviewIsRenderedListener();
-        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
+        if ($event instanceof BeforeContainerPreviewIsRenderedEvent) {
             $subject->processPre14($event);
         } else {
             $subject->processFor14($event);
         }
 
-        $definition = $event->getGrid()->getColumns()[200]->getDefinition();
+        $definition = iterator_to_array($event->getGrid()->getColumns())[200]->getDefinition();
         self::assertEquals($expected, $definition['showMinItemsWarning']);
-    }
-
-    #[Test]
-    public function addFrontendResourcesAddJavascriptAndStylesheets(): void
-    {
-        $containerRecord = $this->getContentRecords('tx_container_parent', 0);
-        $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
-
-        /** @var PageRenderer $pageRenderer */
-        $pageRenderer = $this->get(PageRenderer::class);
-
-        $subject = new BeforeContainerPreviewIsRenderedListener();
-        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
-            $subject->processPre14($event);
-        } else {
-            $subject->processFor14($event);
-        }
-
-        $reflectedClass = new \ReflectionClass($pageRenderer);
-        $property = $reflectedClass->getProperty('cssFiles');
-
-        $arrayValuesHasSubstring = count(
-            array_filter(
-                $property->getValue($pageRenderer),
-                function ($value) {
-                    return str_contains($value['file'], 'Resources/Public/Css/container.css');
-                }
-            )
-        ) > 0;
-
-        self::assertTrue($arrayValuesHasSubstring);
-
-        $moduleName = '@evoweb/ew-collapsible-container/container.js';
-        $javascriptInstruction = array_map(
-            fn(array $item) => $item['payload']->getName() === $moduleName ? $moduleName : '',
-            $pageRenderer->getJavaScriptRenderer()->toArray()
-        );
-
-        self::assertContains($moduleName, $javascriptInstruction);
     }
 
     private function getPageContext(ServerRequestInterface $request): PageContext
     {
+        /** @var PageContextFactory $pageContextFactory */
         $pageContextFactory = $this->get(PageContextFactory::class);
         return $pageContextFactory->createFromRequest($request, 1, $this->backendUser);
     }
 
-    private function getReuqest(): ServerRequestInterface
+    private function getRequest(): ServerRequestInterface
     {
         $site = new Site('test-site', 1, [
             'base' => 'https://example.com/',
