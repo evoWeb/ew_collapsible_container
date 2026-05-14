@@ -15,69 +15,54 @@ declare(strict_types=1);
 
 namespace Evoweb\EwCollapsibleContainer\EventListener;
 
-use B13\Container\Backend\Grid\ContainerGridColumn as BaseContainerGridColum;
-use B13\Container\Backend\Grid\ContainerGridColumnItem;
-use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent as BeforeContainerPreviewIsRenderedEventBefore14;
-use Evoweb\EwCollapsibleContainer\Xclass\BeforeContainerPreviewIsRenderedEvent;
+use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
+use Evoweb\EwCollapsibleContainer\Event\BeforeContainerPreviewIsRenderedEvent14;
 use Evoweb\EwCollapsibleContainer\Xclass\ContainerGridColumn;
+use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
+use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
-use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Domain\RecordInterface;
 
 class BeforeContainerPreviewIsRenderedListener
 {
-    public function __construct(protected PageRenderer $pageRenderer)
+    #[AsEventListener('collapsible-container-beforepreview')]
+    public function processPre14(BeforeContainerPreviewIsRenderedEvent $event): void
     {
+        $this->processGridColumns($event->getContainer()->getContainerRecord(), $event->getGrid());
     }
 
-    #[AsEventListener('collapsible-container-beforepreview', BeforeContainerPreviewIsRenderedEventBefore14::class)]
-    public function __invokeBefore14(BeforeContainerPreviewIsRenderedEventBefore14 $event): void
+    #[AsEventListener('collapsible-container-beforepreview14')]
+    public function processFor14(BeforeContainerPreviewIsRenderedEvent14 $event): void
     {
-        $record = $event->getContainer()->getContainerRecord();
+        $this->processGridColumns($event->getContainer()->getContainerRecord(), $event->getGrid());
+    }
 
+    /**
+     * @param array<string, string|int|null|float> $record
+     */
+    protected function processGridColumns(array $record, Grid $grid): void
+    {
         /** @var ContainerGridColumn $column */
-        foreach ($event->getGrid()->getColumns() as $column) {
+        foreach ($grid->getColumns() as $column) {
             $countOfHiddenItems = $this->getCountOfHiddenItems($column);
             $column->setOverride([
                 'countOfHiddenItems' => $countOfHiddenItems,
                 'collapsed' => $this->getColumnCollapsed((int)$record['uid'], $column),
-                'showMinItemsWarning' => $this->getShowMinItemsWarning($column, $countOfHiddenItems)
+                'showMinItemsWarning' => $this->getShowMinItemsWarning($column, $countOfHiddenItems),
             ]);
         }
-
-        $this->addFrontendResources();
-    }
-
-    #[AsEventListener('collapsible-container-beforepreview', BeforeContainerPreviewIsRenderedEvent::class)]
-    public function __invoke(BeforeContainerPreviewIsRenderedEvent $event): void
-    {
-        $record = $event->getContainer()->getContainerRecord();
-
-        /** @var ContainerGridColumn $column */
-        foreach ($event->getGrid()->getColumns() as $column) {
-            $countOfHiddenItems = $this->getCountOfHiddenItems($column);
-            $column->setOverride([
-                'countOfHiddenItems' => $countOfHiddenItems,
-                'collapsed' => $this->getColumnCollapsed((int)$record['uid'], $column),
-                'showMinItemsWarning' => $this->getShowMinItemsWarning($column, $countOfHiddenItems)
-            ]);
-        }
-
-        $this->addFrontendResources();
     }
 
     protected function getCountOfHiddenItems(ContainerGridColumn $columnObject): int
     {
         return count(
             array_filter(
-                $columnObject->getItems(),
-                function (ContainerGridColumnItem $item) {
+                iterator_to_array($columnObject->getItems()),
+                function (GridColumnItem $item) {
                     $record = $item->getRecord();
-                    $hidden = is_array($record) ?
-                        ($record['hidden'] ?? 0) :
-                        ($record->getRawRecord()->has('hidden') ? $record->getRawRecord()->get('hidden') : 0);
-                    return $hidden > 0;
+                    $record = $record instanceof RecordInterface ? $record->getRawRecord()->toArray() : $record;
+                    return $record['hidden'] > 0;
                 }
             )
         );
@@ -86,9 +71,7 @@ class BeforeContainerPreviewIsRenderedListener
     protected function getColumnCollapsed(int $recordUid, ContainerGridColumn $columnObject): bool
     {
         $backendUser = $this->getBackendUser();
-        $collapseId = $recordUid
-            . BaseContainerGridColum::CONTAINER_COL_POS_DELIMITER
-            . $columnObject->getColumnNumber();
+        $collapseId = $recordUid . '-' . $columnObject->getColumnNumber();
         if (isset($backendUser->uc['moduleData']['list']['containerExpanded'][$collapseId])) {
             $collapsed = $backendUser->uc['moduleData']['list']['containerExpanded'][$collapseId] > 0;
         } else {
@@ -99,21 +82,15 @@ class BeforeContainerPreviewIsRenderedListener
 
     protected function getShowMinItemsWarning(ContainerGridColumn $columnObject, int $hiddenItemCount): bool
     {
-        $itemCount = count($columnObject->getItems());
+        $itemCount = count(iterator_to_array($columnObject->getItems()));
         $minItems = (int)($columnObject->getDefinition()['minitems'] ?? 0);
         return $itemCount > 0 && ($itemCount - $hiddenItemCount) < $minItems;
     }
 
-    protected function addFrontendResources(): void
-    {
-        $this->pageRenderer->addCssFile('EXT:ew_collapsible_container/Resources/Public/Css/container.css');
-        $this->pageRenderer->getJavaScriptRenderer()->addJavaScriptModuleInstruction(
-            JavaScriptModuleInstruction::create('@evoweb/ew-collapsible-container/container.js')
-        );
-    }
-
     protected function getBackendUser(): BackendUserAuthentication
     {
-        return $GLOBALS['BE_USER'];
+        /** @var BackendUserAuthentication $user */
+        $user = $GLOBALS['BE_USER'];
+        return $user;
     }
 }

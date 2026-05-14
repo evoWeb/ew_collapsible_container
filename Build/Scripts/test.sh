@@ -139,7 +139,7 @@ DEBUG_TESTS=false
 if [[ $DEBUG_TESTS != true ]]; then
     checkResources
 
-    TCORE="^13.1"
+    TCORE="^13.4.0"
     TFRAMEWORK="^9.2.1"
     runFunctionalTests "8.2" ${TCORE} ${TFRAMEWORK} ${TPATH} || exit 1
     runFunctionalTests "8.2" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
@@ -147,17 +147,19 @@ if [[ $DEBUG_TESTS != true ]]; then
     runFunctionalTests "8.3" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
     runFunctionalTests "8.4" ${TCORE} ${TFRAMEWORK} ${TPATH} || exit 1
     runFunctionalTests "8.4" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
+    runFunctionalTests "8.5" ${TCORE} ${TFRAMEWORK} ${TPATH} || exit 1
+    runFunctionalTests "8.5" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
 
     TCORE="^14.0"
-    TFRAMEWORK="dev-main"
+    TFRAMEWORK="^9.5.0"
     runFunctionalTests "8.2" ${TCORE} ${TFRAMEWORK} ${TPATH} || exit 1
     runFunctionalTests "8.2" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
     runFunctionalTests "8.3" ${TCORE} ${TFRAMEWORK} ${TPATH} || exit 1
     runFunctionalTests "8.3" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
     runFunctionalTests "8.4" ${TCORE} ${TFRAMEWORK} ${TPATH} || exit 1
-    #runFunctionalTests "8.4" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
+    runFunctionalTests "8.4" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
     runFunctionalTests "8.5" ${TCORE} ${TFRAMEWORK} ${TPATH} || exit 1
-    #runFunctionalTests "8.5" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
+    runFunctionalTests "8.5" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
 else
     #cleanup
     runFunctionalTests "8.2" "^14.0" "dev-main" ${TPATH} ${LOWEST} || exit 1

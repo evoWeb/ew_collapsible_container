@@ -2,53 +2,33 @@
 
 declare(strict_types=1);
 
+namespace Evoweb\EwCollapsibleContainer\Xclass;
+
 /*
- * This file is developed by evoWeb.
+ * This file is part of TYPO3 CMS-based extension "container" by b13.
  *
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
  * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
  */
-
-namespace Evoweb\EwCollapsibleContainer\Xclass;
 
 use B13\Container\Backend\Grid\ContainerGridColumn;
 use B13\Container\Backend\Grid\ContainerGridColumnItem;
-use B13\Container\Backend\Preview\GridRenderer as BaseGridRenderer;
-use B13\Container\Backend\Service\NewContentUrlBuilder;
 use B13\Container\Domain\Factory\Exception;
-use B13\Container\Domain\Factory\PageView\Backend\ContainerFactory;
-use B13\Container\Tca\Registry;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
+use Evoweb\EwCollapsibleContainer\Event\BeforeContainerPreviewIsRenderedEvent14;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridRow;
 use TYPO3\CMS\Backend\View\PageLayoutContext;
-use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Core\View\ViewFactoryInterface;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
-// @todo needed for $beforeContainerPreviewIsRendered
-class GridRenderer extends BaseGridRenderer
+class GridRenderer extends \B13\Container\Backend\Preview\GridRenderer
 {
-    public function __construct(
-        Registry $tcaRegistry,
-        ContainerFactory $containerFactory,
-        NewContentUrlBuilder $newContentUrlBuilder,
-        EventDispatcherInterface $eventDispatcher,
-        #[Autowire(service: 'cache.runtime')]
-        FrontendInterface $runtimeCache
-    ) {
-        parent::__construct($tcaRegistry, $containerFactory, $newContentUrlBuilder, $eventDispatcher, $runtimeCache);
-    }
-
     public function renderGrid(array $record, PageLayoutContext $context): string
     {
         $grid = GeneralUtility::makeInstance(Grid::class, $context);
@@ -103,12 +83,19 @@ class GridRenderer extends BaseGridRenderer
         // keep compatibility
         $view->assign('containerGrid', $grid);
         $view->assign('grid', $grid);
+        $view->assign('gridColumns', array_fill(1, $grid->getSpan(), null));
         $view->assign('containerRecord', $record);
         $view->assign('context', $context);
         $parentGridColumnItem = $this->runtimeCache->get('tx_container_current_gridColumItem');
-
-        $beforeContainerPreviewIsRendered = new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $parentGridColumnItem);
-        $this->eventDispatcher->dispatch($beforeContainerPreviewIsRendered);
+        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
+            // cannot be used for v14 / dev-main branch
+            // needs adaption in next major version
+            $beforeContainerPreviewIsRendered = new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $parentGridColumnItem);
+            $this->eventDispatcher->dispatch($beforeContainerPreviewIsRendered);
+        } else {
+            $beforeContainerPreviewIsRendered = new BeforeContainerPreviewIsRenderedEvent14($container, $view, $grid);
+            $this->eventDispatcher->dispatch($beforeContainerPreviewIsRendered);
+        }
         $rendered = $view->render();
         return $rendered;
     }

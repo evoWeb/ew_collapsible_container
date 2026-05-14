@@ -29,7 +29,6 @@ use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
-use TYPO3\CMS\Core\Http\ServerRequestFactory;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -43,7 +42,9 @@ class ContainerGridColumnTest extends FunctionalTestCase
     {
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/be_users.csv');
         $this->backendUser = $this->setUpBackendUser(1);
-        $GLOBALS['LANG'] = $this->get(LanguageServiceFactory::class)->createFromUserPreferences($this->backendUser);
+        /** @var LanguageServiceFactory $languageServiceFactory */
+        $languageServiceFactory = $this->get(LanguageServiceFactory::class);
+        $GLOBALS['LANG'] = $languageServiceFactory->createFromUserPreferences($this->backendUser);
 
         $request = $this->getReuqest();
         if (class_exists(PageContext::class)) {
@@ -55,10 +56,15 @@ class ContainerGridColumnTest extends FunctionalTestCase
                 $request,
             );
         } else {
+            // v13.4 PageLayoutContext has different signature
+            // @phpstan-ignore arguments.count
             $pageLayoutContext = new PageLayoutContext(
+                // @phpstan-ignore argument.type
                 [],
                 new BackendLayout('', '', []),
+                // @phpstan-ignore argument.type
                 new Site('test', 1, []),
+                // @phpstan-ignore argument.type
                 new DrawingConfiguration(),
                 $request
             );
@@ -82,11 +88,12 @@ class ContainerGridColumnTest extends FunctionalTestCase
             'showMinItemsWarning' => false,
         ]);
 
-        $this->assertArrayHasKey('countOfHiddenItems', $subject->getDefinition());
+        self::assertArrayHasKey('countOfHiddenItems', $subject->getDefinition());
     }
 
     private function getPageContext(ServerRequestInterface $request): PageContext
     {
+        /** @var PageContextFactory $pageContextFactory */
         $pageContextFactory = $this->get(PageContextFactory::class);
         return $pageContextFactory->createFromRequest(
             $request,

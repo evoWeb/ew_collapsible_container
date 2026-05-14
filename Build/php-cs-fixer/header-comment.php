@@ -32,21 +32,13 @@ if (PHP_SAPI !== 'cli') {
 $finder = PhpCsFixer\Finder::create()
     ->name('*.php')
     ->in(__DIR__ . '/../../')
-    ->exclude('Acceptance/Support/_generated') // EXT:core
     ->exclude('Build')
     // Configuration files do not need header comments
     ->exclude('Configuration')
-    ->notName('*locallang*.php')
     ->notName('ext_localconf.php')
-    ->notName('ext_tables.php')
     ->notName('ext_emconf.php')
-    // ClassAliasMap files do not need header comments
-    ->notName('ClassAliasMap.php')
     // CodeSnippets and Examples in Documentation do not need header comments
     ->exclude('Documentation')
-    // Third-party inclusion files should not have a changed comment
-    ->notName('Rfc822AddressesParser.php')
-    ->notName('ClassMapGenerator.php')
 ;
 
 $headerComment = <<<COMMENT
