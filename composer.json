@@ -46,7 +46,7 @@
 			"extension-key": "ew_collapsible_container",
 			"app-dir": "Build",
 			"web-dir": "Build/Web",
-			"version": "2.3.0",
+			"version": "2.4.0",
 			"Package": {
 				"providesPackages": {
 				}
