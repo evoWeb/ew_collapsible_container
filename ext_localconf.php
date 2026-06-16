@@ -14,7 +14,4 @@ if (ExtensionManagementUtility::isLoaded('container')) {
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][BaseContainerGridColumn::class] = [
         'className' => ContainerGridColumn::class,
     ];
-    $GLOBALS['TYPO3_CONF_VARS']['SYS']['Objects'][BaseGridRenderer::class] = [
-        'className' => GridRenderer::class,
-    ];
 }
