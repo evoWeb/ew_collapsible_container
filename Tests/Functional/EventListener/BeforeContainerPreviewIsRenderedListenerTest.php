@@ -22,7 +22,6 @@ use B13\Container\Domain\Model\Container;
 use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
 use B13\Container\Tca\ContainerConfiguration;
 use B13\Container\Tca\Registry;
-use Evoweb\EwCollapsibleContainer\Event\BeforeContainerPreviewIsRenderedEvent14;
 use Evoweb\EwCollapsibleContainer\EventListener\BeforeContainerPreviewIsRenderedListener;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -32,8 +31,6 @@ use TYPO3\CMS\Backend\Context\PageContextFactory;
 use TYPO3\CMS\Backend\Module\ModuleData;
 use TYPO3\CMS\Backend\View\BackendLayout\BackendLayout;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
-use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumn;
-use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridRow;
 use TYPO3\CMS\Backend\View\Drawing\DrawingConfiguration;
 use TYPO3\CMS\Backend\View\PageLayoutContext;
@@ -44,13 +41,11 @@ use TYPO3\CMS\Core\Domain\RecordFactory;
 use TYPO3\CMS\Core\Domain\RecordInterface;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\View\ViewFactoryData;
 use TYPO3\CMS\Fluid\View\FluidViewFactory;
-use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
@@ -130,7 +125,7 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
 
     protected function getBeforeContainerPreviewIsRenderedEvent(
         RecordInterface $record
-    ): BeforeContainerPreviewIsRenderedEvent|BeforeContainerPreviewIsRenderedEvent14 {
+    ): BeforeContainerPreviewIsRenderedEvent {
         $request = $this->getRequest();
         if (class_exists(PageContext::class)) {
             $pageContext = $this->getPageContext($request);
@@ -140,7 +135,6 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
                 new DrawingConfiguration(),
                 $request,
             );
-            $item = new GridColumnItem($context, (new GridColumn($context, [])), $record);
         } else {
             // v13.4 PageLayoutContext has different signature
             // @phpstan-ignore arguments.count
@@ -154,8 +148,6 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
                 new DrawingConfiguration(),
                 $request,
             );
-            // @phpstan-ignore argument.type
-            $item = new GridColumnItem($context, (new GridColumn($context, [])), $record->toArray());
         }
 
         $grid = new Grid($context);
@@ -205,6 +197,7 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
                             $context,
                             $columnObject,
                             $contentRecord,
+                            $registry,
                             $container,
                             ''
                         );
@@ -215,20 +208,10 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
             $grid->addRow($rowObject);
         }
 
-        if ((GeneralUtility::makeInstance(Typo3Version::class))->getMajorVersion() <= 13) {
-            /** @var StandaloneView $view */
-            $view = $this->getMockBuilder(StandaloneView::class)
-                ->disableOriginalConstructor()
-                ->getMock();
-            // @phpstan-ignore argument.type
-            $event = new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid, $item);
-        } else {
-            /** @var FluidViewFactory $viewFactory */
-            $viewFactory = $this->get(FluidViewFactory::class);
-            $view = $viewFactory->create(new ViewFactoryData());
-            $event = new BeforeContainerPreviewIsRenderedEvent14($container, $view, $grid);
-        }
-        return $event;
+        /** @var FluidViewFactory $viewFactory */
+        $viewFactory = $this->get(FluidViewFactory::class);
+        $view = $viewFactory->create(new ViewFactoryData());
+        return new BeforeContainerPreviewIsRenderedEvent($container, $view, $grid);
     }
 
     #[Test]

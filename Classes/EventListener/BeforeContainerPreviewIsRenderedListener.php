@@ -16,7 +16,6 @@ declare(strict_types=1);
 namespace Evoweb\EwCollapsibleContainer\EventListener;
 
 use B13\Container\Events\BeforeContainerPreviewIsRenderedEvent;
-use Evoweb\EwCollapsibleContainer\Event\BeforeContainerPreviewIsRenderedEvent14;
 use Evoweb\EwCollapsibleContainer\Xclass\ContainerGridColumn;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\Grid;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
@@ -28,12 +27,6 @@ class BeforeContainerPreviewIsRenderedListener
 {
     #[AsEventListener('collapsible-container-beforepreview')]
     public function processPre14(BeforeContainerPreviewIsRenderedEvent $event): void
-    {
-        $this->processGridColumns($event->getContainer()->getContainerRecord(), $event->getGrid());
-    }
-
-    #[AsEventListener('collapsible-container-beforepreview14')]
-    public function processFor14(BeforeContainerPreviewIsRenderedEvent14 $event): void
     {
         $this->processGridColumns($event->getContainer()->getContainerRecord(), $event->getGrid());
     }
