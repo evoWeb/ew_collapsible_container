@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
-    <title>Collapsible container 2.4.0
+    <title>Collapsible container 2.4.1
         documentation</title>
 
     
@@ -10,11 +10,11 @@
 <meta content="phpdocumentor/guides" name="generator">
 <meta content="Collapsible container" name="docsearch:name">
 <meta content="" name="docsearch:package_type">
-<meta content="2.4.0" name="docsearch:release">
-<meta content="2.4.0" name="docsearch:version">
-<meta content="2026-05-14T19:04:40+00:00" name="docsearch:modified">
-<meta content="2026-05-14T19:04:40+00:00" name="dc.modified">
-<meta content="2026-05-14T19:04:40+00:00" property="article:modified_time">
+<meta content="2.4.1" name="docsearch:release">
+<meta content="2.4.1" name="docsearch:version">
+<meta content="2026-06-16T17:27:48+00:00" name="docsearch:modified">
+<meta content="2026-06-16T17:27:48+00:00" name="dc.modified">
+<meta content="2026-06-16T17:27:48+00:00" property="article:modified_time">
     <link href="http://purl.org/dc/elements/1.1/" rel="schema.dc">
 <link href="../_resources/css/theme.css" rel="stylesheet">
 <link href="https://docs.typo3.org/search/" rel="search" title="Search">
@@ -33,16 +33,16 @@
     </div>
     <div class="page-header">
         <div class="page-header-inner">
-            <div class="d-flex flex-wrap">
-                <div class="logo-wrapper">
-                    <a class="logo" href="https://docs.typo3.org/" title="TYPO3 Documentation">
-                        <img alt="TYPO3 Logo" class="logo-image" src="../_resources/img/typo3-logo.svg" width="484" height="130">
-                    </a>
-                </div>
-                <div class="align-self-center order-lg-2 order-last">
-                    
+            <a class="navbar-brand" href="https://docs.typo3.org/" title="TYPO3 Documentation">
+                <span class="navbar-brand-text">
+                    <img src="../_resources/img/typo3-soul.svg" alt="TYPO3" class="navbar-brand-logo" width="29" height="29">
+                    <span class="navbar-brand-name">Documentation</span>
+                </span>
+            </a>
+            <div class="header-nav">
+                
 <div class="toc-header">
-    <div class="toc-title pe-3">
+    <div class="toc-title">
                             <a class="toc-title-project" href="../Index.html">Container with collapsible columns</a>
             </div>
     <label for="languageSelect" class="visually-hidden">Select language</label>
@@ -52,49 +52,49 @@
                                   
         <label for="versionSelect" class="visually-hidden">Select version</label>
         <select id="versionSelect" class="form-select"
-                data-current-version="2.4.0"
+                data-current-version="2.4.1"
             data-override-url-proxy="../_resources/js/versions-proxy.php?url=" data-override-url-self="https://docs.typo3.org/m/typo3/tutorial-getting-started/12.4/en-us/Concepts/Index.html"
         >
             <option disabled selected>Loading versions...</option>
         </select>
-    </div>                </div>
-                <div class="ms-auto order-lg-3 d-flex">
-                    <div class="menu-search-wrapper">
-                        <button id="toc-toggle" class="btn btn-light d-block d-lg-none" tabindex="0" aria-controls="toc-collapse" aria-expanded="false">
-                            <i class="fas fa-bars"></i> <span class="visually-hidden">Mobile Menu</span>
-                        </button>
-                        <all-documentations-menu data-override-url="../_resources/js/menu-proxy.php"></all-documentations-menu>
-                                                <search role="search">
-                            <form action="https://docs.typo3.org/search/search" id="global-search-form" method="get">
-                                <div class="sr-only"><label for="globalsearchinput">TYPO3 documentation...</label></div>
-                                <div class="input-group mb-3 mt-sm-3">
-                                    <select class="form-select search__scope" id="searchscope" name="scope">
-                                        <option value="">Search all</option>
-                                    </select>
-                                    <input autocomplete="off" class="form-control shadow-none" id="globalsearchinput" name="q" placeholder="TYPO3 documentation..." type="text" value="">
-                                    <button class="btn btn-light" type="submit"><i class="fa fa-search"></i>&nbsp;<span class="d-none d-md-inline">Search</span></button>
-                                </div>
-                            </form>
-                            <div id="global-search-root"></div>
-                        </search>
-                        <div class="position-relative d-inline-block">
-                            <button id="options-toggle" class="btn btn-light d-block" type="button" aria-expanded="false">
-                                <i class="fas fa-cog"></i> <span class="visually-hidden">Options</span>
+    </div>            </div>
+            <div class="header-actions">
+                <button id="search-toggle" class="btn btn-light d-lg-none" type="button"
+                        aria-label="Search" aria-expanded="false" aria-controls="header-search-expand">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+                <button id="toc-toggle" class="btn btn-light d-lg-none" type="button"
+                        aria-label="Menu" aria-expanded="false" aria-controls="toc-collapse">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
+                <all-documentations-menu data-override-url="../_resources/js/menu-proxy.php"></all-documentations-menu>
+                                <search id="header-search-expand" class="header-search" role="search" aria-label="Site search">
+                    <form action="https://docs.typo3.org/search/search" id="global-search-form" method="get">
+                        <div class="sr-only"><label for="globalsearchinput">TYPO3 documentation...</label></div>
+                        <div class="input-group">
+                            <select class="form-select search__scope" id="searchscope" name="scope">
+                                <option value="">Search all</option>
+                            </select>
+                            <input autocomplete="off" class="form-control shadow-none" id="globalsearchinput" name="q" placeholder="TYPO3 documentation..." type="text" value="">
+                            <button class="btn btn-light" type="submit" aria-label="Search">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                                <span>Search</span>
                             </button>
-
-                            <div id="options-panel"
-                                 class="shadow p-3"
-                                 role="menu"
-                                 aria-hidden="true">
-                                <h6 class="dropdown-header text-muted text-uppercase small mb-2">Options</h6>
-
-                                                                                                        <a class="dropdown-item d-flex align-items-center gap-2" href="../Index.html" rel="noopener">
-                                        <i class="fas fa-file-alt"></i>
-                                        Switch to regular view
-                                    </a>
-                                                            </div>
                         </div>
-                    </div>
+                    </form>
+                    <div id="global-search-root"></div>
+                </search>
+                <button id="options-toggle" class="btn btn-light" type="button"
+                        aria-controls="options-panel" aria-expanded="false" popovertarget="options-panel">
+                    <i class="fas fa-cog" aria-hidden="true"></i>
+                    <span class="visually-hidden">Options</span>
+                </button>
+                <div id="options-panel" class="shadow p-3" popover>
+                    <h6 class="dropdown-header text-muted text-uppercase small mb-2">Options</h6>
+                            <a class="dropdown-item d-flex align-items-center gap-2" href="../Index.html" rel="noopener">
+        <i class="fas fa-file-alt"></i>
+        Switch to regular view
+    </a>
                 </div>
             </div>
         </div>
@@ -108,6 +108,13 @@
                                                 <div aria-label="main navigation" class="toc"
                              role="navigation">
                                                                                 </div>
+                        <div class="toc-options d-lg-none">
+                            <p class="caption">Options</p>
+                                    <a class="dropdown-item d-flex align-items-center gap-2" href="../Index.html" rel="noopener">
+        <i class="fas fa-file-alt"></i>
+        Switch to regular view
+    </a>
+                        </div>
                     </div>
                 </nav>
             </div>
@@ -135,7 +142,7 @@
 
         <dd class="field-odd">
             
-    <p>2.4.0</p>
+    <p>2.4.1</p>
         </dd>
             <dt class="field-odd">Language</dt>
 
@@ -161,7 +168,7 @@ license.</p>
 
         <dd class="field-odd">
             
-    <p>Thu, 14 May 2026 19:04:40 +0000</p>
+    <p>Tue, 16 Jun 2026 17:27:48 +0000</p>
         </dd>
             <dt class="field-odd">Copyright</dt>
 
@@ -357,9 +364,7 @@ GeneralUtility::makeInstance(Registry::class)-&gt;configureContainer($configurat
             </div>
         </div>
     </div>
-</div></div>
-
-
+</div>    
 <footer class="page-footer">
     <div class="frame frame-ruler-before frame-background-dark">
         <div class="frame-container">
@@ -370,7 +375,7 @@ GeneralUtility::makeInstance(Registry::class)-&gt;configureContainer($configurat
                                                 <li><a href="https://github.com/evoweb/ew_collapsible_container/issues" rel="nofollow noopener" title="Issues"><span>Issues</span></a></li>
                                                 <li><a href="https://github.com/evoweb/ew_collapsible_container" rel="nofollow noopener" title="Repository"><span>Repository</span></a></li>
                                             </ul>                <div class="footer-additional">
-                    <p class="text-center">Last rendered: May 14, 2026 19:04</p>
+                    <p class="text-center">Last rendered: Jun 16, 2026 17:27</p>
                 </div>
                 <div class="footer-meta">
                                         <div class="footer-meta-copyright">
@@ -384,7 +389,16 @@ GeneralUtility::makeInstance(Registry::class)-&gt;configureContainer($configurat
             </div>
         </div>
     </div>
-</footer>
+</footer></div>
+
+
+<script>
+    if (!(window.CSS && CSS.supports("animation-timeline", "scroll()"))) {
+        var scrollTimelinePolyfill = document.createElement("script");
+        scrollTimelinePolyfill.src = "../_resources/js/scroll-timeline.js";
+        document.head.appendChild(scrollTimelinePolyfill);
+    }
+</script>
 <script src="../_resources/js/bootstrap.min.js"></script>
 <script src="../_resources/js/theme.min.js"></script>
 
