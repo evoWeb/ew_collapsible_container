@@ -6,6 +6,7 @@ on:
     tags: [ '*' ]
   pull_request:
     branches: [ develop ]
+  workflow_dispatch:
 
 jobs:
 
@@ -31,103 +32,16 @@ jobs:
     name: All php tests
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
+        php: ['8.2', '8.3', '8.4', '8.5']
+        prefer: ['', '--prefer-lowest']
         packages:
-          - php: '8.2'
-            core: '^13.0'
+          - core: '^13.4'
             framework: '^9.2.1'
-            prefer: ''
-            testpath: 'Tests/Functional'
 
-          - php: '8.2'
-            core: '^13.0'
-            framework: '^9.2.1'
-            prefer: '--prefer-lowest'
-            testpath: 'Tests/Functional'
-
-          - php: '8.3'
-            core: '^13.0'
-            framework: '^9.2.1'
-            prefer: ''
-            testpath: 'Tests/Functional'
-
-          - php: '8.3'
-            core: '^13.0'
-            framework: '^9.2.1'
-            prefer: '--prefer-lowest'
-            testpath: 'Tests/Functional'
-
-          - php: '8.4'
-            core: '^13.0'
-            framework: '^9.2.1'
-            prefer: ''
-            testpath: 'Tests/Functional'
-
-          - php: '8.4'
-            core: '^13.4'
-            framework: '^9.2.1'
-            prefer: '--prefer-lowest'
-            testpath: 'Tests/Functional'
-
-          - php: '8.5'
-            core: '^13.0'
-            framework: '^9.2.1'
-            prefer: ''
-            testpath: 'Tests/Functional'
-
-          - php: '8.5'
-            core: '^13.4'
-            framework: '^9.2.1'
-            prefer: '--prefer-lowest'
-            testpath: 'Tests/Functional'
-
-          - php: '8.2'
-            core: '^14.0'
+          - core: '^14.3'
             framework: '^9.5.0'
-            prefer: ''
-            testpath: 'Tests/Functional'
-
-          - php: '8.2'
-            core: '^14.0'
-            framework: '^9.5.0'
-            prefer: '--prefer-lowest'
-            testpath: 'Tests/Functional'
-
-          - php: '8.3'
-            core: '^14.0'
-            framework: '^9.5.0'
-            prefer: ''
-            testpath: 'Tests/Functional'
-
-          - php: '8.3'
-            core: '^14.0'
-            framework: '^9.5.0'
-            prefer: '--prefer-lowest'
-            testpath: 'Tests/Functional'
-
-          - php: '8.4'
-            core: '^14.0'
-            framework: '^9.5.0'
-            prefer: ''
-            testpath: 'Tests/Functional'
-
-          - php: '8.4'
-            core: '^14.0'
-            framework: '^9.5.0'
-            prefer: '--prefer-lowest'
-            testpath: 'Tests/Functional'
-
-          - php: '8.5'
-            core: '^14.0'
-            framework: '^9.5.0'
-            prefer: ''
-            testpath: 'Tests/Functional'
-
-          - php: '8.5'
-            core: '^14.0'
-            framework: '^9.5.0'
-            prefer: '--prefer-lowest'
-            testpath: 'Tests/Functional'
 
     steps:
       - name: Checkout
@@ -138,33 +52,33 @@ jobs:
       - name: Lint php
         run: |
           Build/Scripts/runTests.sh \
-            -p ${{ matrix.packages.php }} \
+            -p ${{ matrix.php }} \
             -s lintPhp
 
       - name: Composer install core
         run: |
           Build/Scripts/runTests.sh \
-            -p ${{ matrix.packages.php }} \
-            -s composer require ${{ matrix.packages.prefer }} "typo3/cms-core:${{ matrix.packages.core }}"
+            -p ${{ matrix.php }} \
+            -s composer require ${{ matrix.prefer }} "typo3/cms-core:${{ matrix.packages.core }}"
 
       - name: Composer install framework
         run: |
           Build/Scripts/runTests.sh \
-            -p ${{ matrix.packages.php }} \
-            -s composer require --dev ${{ matrix.packages.prefer }} "typo3/testing-framework:${{ matrix.packages.framework }}"
+            -p ${{ matrix.php }} \
+            -s composer require --dev ${{ matrix.prefer }} "typo3/testing-framework:${{ matrix.packages.framework }}"
 
       - name: Composer validate
         run: |
           Build/Scripts/runTests.sh \
-            -p ${{ matrix.packages.php }} \
+            -p ${{ matrix.php }} \
             -s composerValidate
 
       - name: Functional tests with sqlite
         run: |
           Build/Scripts/runTests.sh \
-            -p ${{ matrix.packages.php }} \
+            -p ${{ matrix.php }} \
             -d sqlite \
-            -s functional ${{ matrix.packages.testpath }}
+            -s functional Tests/Functional
 
       - name: Cleanup
         run: |

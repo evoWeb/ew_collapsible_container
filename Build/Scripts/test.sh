@@ -113,13 +113,13 @@ runFunctionalTests () {
         [[ ${EXIT_CODE_FUNCTIONAL} -eq 0 ]]
     then
         echo -e "${GREEN}SUCCESS${NC}" >&2
+        cleanup
     else
         echo -e "${RED}FAILURE${NC}" >&2
         exit 1
     fi
     echo "#################################################################" >&2
     echo "" >&2
-    cleanup
 }
 
 #################################################
@@ -150,7 +150,7 @@ if [[ $DEBUG_TESTS != true ]]; then
     runFunctionalTests "8.5" ${TCORE} ${TFRAMEWORK} ${TPATH} || exit 1
     runFunctionalTests "8.5" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
 
-    TCORE="^14.0"
+    TCORE="^14.3"
     TFRAMEWORK="^9.5.0"
     runFunctionalTests "8.2" ${TCORE} ${TFRAMEWORK} ${TPATH} || exit 1
     runFunctionalTests "8.2" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
@@ -161,8 +161,8 @@ if [[ $DEBUG_TESTS != true ]]; then
     runFunctionalTests "8.5" ${TCORE} ${TFRAMEWORK} ${TPATH} || exit 1
     runFunctionalTests "8.5" ${TCORE} ${TFRAMEWORK} ${TPATH} ${LOWEST} || exit 1
 else
-    #cleanup
-    runFunctionalTests "8.2" "^14.0" "dev-main" ${TPATH} ${LOWEST} || exit 1
+    cleanup
+    runFunctionalTests "8.2" "^14.3" "^9.5.0" ${TPATH} ${LOWEST} || exit 1
     # ./runTests.sh -x -p 8.2 -d sqlite -s functional -e "--group selected" Tests/Functional
     # ./runTests.sh -x -p 8.2 -d sqlite -s functional Tests/Functional
 fi
