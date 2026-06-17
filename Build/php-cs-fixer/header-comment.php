@@ -19,7 +19,7 @@ declare(strict_types=1);
  * Run it using runTests.sh, see 'runTests.sh -h' for more options.
  *
  * Fix entire extension:
- * > Build/Scripts/additionalTests.sh -p 8.3 -s composerInstallPackage -q "typo3/cms-core:[dev-main,13...]"
+ * > Build/Scripts/runTests.sh -p 8.3 -s composer -- require "typo3/cms-core:[dev-main,13...]"
  * > Build/Scripts/runTests.sh -s cglHeader
  *
  * Fix your current patch:

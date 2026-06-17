@@ -24,7 +24,6 @@ install: ##@ Composer install
 cleanup: ##@ Cleanup
 	echo "Cleanup started"
 	Build/Scripts/runTests.sh -s clean
-	Build/Scripts/additionalTests.sh -s clean
 	echo "Cleanup finished";
 
 

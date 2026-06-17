@@ -33,15 +33,15 @@ def run(cmd: str) -> None:
 
 def cleanup() -> None:
     run('./runTests.sh -s clean')
-    run('./additionalTests.sh -s clean')
 
 
 def check_resources() -> None:
     print('################################################################')
     print(' Checking documentation and xliff files')
     print('################################################################')
-    run('./additionalTests.sh -s lintXliff')
-    run('./additionalTests.sh -s buildDocumentation')
+    run('./runTests.sh -s composerInstall')
+    run('./runTests.sh -s checkIntegrityXliff')
+    run('./runTests.sh -s checkRstRenderingSingle')
     print(f'{GREEN}Resources valid{NC}')
     cleanup()
 
@@ -55,24 +55,23 @@ def run_functional_tests(php: str, core: str, framework: str, prefer: str = '') 
     print('###########################################################################')
     cleanup()
     run(f'./runTests.sh -p {php} -s lintPhp')
-    run(f'./runTests.sh -p {php} -s composer require {prefer_arg} "typo3/cms-core:{core}"')
-    run(f'./runTests.sh -p {php} -s composer require --dev {prefer_arg} "typo3/testing-framework:{framework}"')
+    run(f'./runTests.sh -p {php} -s composer -- require {prefer_arg} "typo3/cms-core:{core}"')
+    run(f'./runTests.sh -p {php} -s composer -- require --dev {prefer_arg} "typo3/testing-framework:{framework}"')
     run(f'./runTests.sh -p {php} -s composerValidate')
-    run(f'./runTests.sh -p {php} -d sqlite -s functional Tests/Functional')
+    run(f'./runTests.sh -p {php} -s functional -d sqlite Tests/Functional')
     print(f'{GREEN}SUCCESS{NC}')
 
 
 def main() -> None:
-    debug = '--debug' in sys.argv
-
-    if debug:
-        cleanup()
-        run_functional_tests('8.2', '^14.3', '^9.5.0', '--prefer-lowest')
-        return
-
     check_resources()
-    for php, prefer, pkg in matrix:
-        run_functional_tests(php, pkg['core'], pkg['framework'], prefer)
+
+    debug = '--debug' in sys.argv
+    if debug:
+        run_functional_tests('8.2', '^14.3', '^9.5.0', '--prefer-lowest')
+    else:
+        for php, prefer, pkg in matrix:
+            run(f'./runTests.sh -p {php} -s cleanTests')
+            run_functional_tests(php, pkg['core'], pkg['framework'], prefer)
     cleanup()
 
 if __name__ == '__main__':
