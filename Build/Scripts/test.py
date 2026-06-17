@@ -55,8 +55,8 @@ def run_functional_tests(php: str, core: str, framework: str, prefer: str = '') 
     print('###########################################################################')
     cleanup()
     run(f'./runTests.sh -p {php} -s lintPhp')
-    run(f'./runTests.sh -p {php} -s composer require {prefer_arg}"typo3/cms-core:{core}"')
-    run(f'./runTests.sh -p {php} -s composer require --dev {prefer_arg}"typo3/testing-framework:{framework}"')
+    run(f'./runTests.sh -p {php} -s composer require {prefer_arg} "typo3/cms-core:{core}"')
+    run(f'./runTests.sh -p {php} -s composer require --dev {prefer_arg} "typo3/testing-framework:{framework}"')
     run(f'./runTests.sh -p {php} -s composerValidate')
     run(f'./runTests.sh -p {php} -d sqlite -s functional Tests/Functional')
     print(f'{GREEN}SUCCESS{NC}')
@@ -73,7 +73,7 @@ def main() -> None:
     check_resources()
     for php, prefer, pkg in matrix:
         run_functional_tests(php, pkg['core'], pkg['framework'], prefer)
-
+    cleanup()
 
 if __name__ == '__main__':
     os.chdir(_SCRIPT_DIR)
