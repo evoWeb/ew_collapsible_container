@@ -98,7 +98,7 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         $registry->configureContainer($configuration);
 
         /** @var array<string, array<string, array<string, array<string, string>>>> $tca */
-        $tca =& $GLOBALS['TCA'];
+        $tca = & $GLOBALS['TCA'];
         $tca['tt_content']['ctrl']['typeicon_classes']['test-container'] = 'content-card-group';
     }
 
@@ -109,7 +109,7 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
         $connectionPool = $this->get(ConnectionPool::class);
         $queryBuilder = $connectionPool->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()->removeAll();
-        /** @var array<string, string|int|null|float>|false $row */
+        /** @var array<string, string|int|float|null>|false $row */
         $row = $queryBuilder
             ->select('*')
             ->from($table)
@@ -246,7 +246,7 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
     public function getCollapsed(bool $state): void
     {
         /** @var array<string, array<string, array<string, array<string, array<int, array<int, array<string, bool>>>>>>> $tca */
-        $tca =& $GLOBALS['TCA'];
+        $tca = & $GLOBALS['TCA'];
         $tca['tt_content']['containerConfiguration']['test-container']['grid'][0][0]['collapsed'] = $state;
         $containerRecord = $this->getContentRecords('tx_container_parent', 0);
         $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);
@@ -277,7 +277,7 @@ class BeforeContainerPreviewIsRenderedListenerTest extends FunctionalTestCase
     public function getShowMinItemsWarning(int $minItems, bool $expected): void
     {
         /** @var array<string, array<string, array<string, array<string, array<int, array<int, array<string, int>>>>>>> $tca */
-        $tca =& $GLOBALS['TCA'];
+        $tca = & $GLOBALS['TCA'];
         $tca['tt_content']['containerConfiguration']['test-container']['grid'][0][0]['minitems'] = $minItems;
         $containerRecord = $this->getContentRecords('tx_container_parent', 0);
         $event = $this->getBeforeContainerPreviewIsRenderedEvent($containerRecord);

@@ -36,10 +36,13 @@ def cleanup() -> None:
 
 
 def check_resources() -> None:
+    php = '8.4'
     print('################################################################')
     print(' Checking documentation and xliff files')
     print('################################################################')
     run('./runTests.sh -s composerInstall')
+    run(f'./runTests.sh -p {php} -s phpstan')
+    run(f'./runTests.sh -p {php} -s cgl -n')
     run('./runTests.sh -s checkIntegrityXliff')
     run('./runTests.sh -s checkRstRenderingSingle')
     print(f'{GREEN}Resources valid{NC}')

@@ -32,7 +32,7 @@ class BeforeContainerPreviewIsRenderedListener
     }
 
     /**
-     * @param array<string, string|int|null|float> $record
+     * @param array<string, string|int|float|null> $record
      */
     protected function processGridColumns(array $record, Grid $grid): void
     {
@@ -53,9 +53,12 @@ class BeforeContainerPreviewIsRenderedListener
             array_filter(
                 iterator_to_array($columnObject->getItems()),
                 function (GridColumnItem $item) {
+                    /** @var RecordInterface|array<string, mixed> $record */
+                    // @phpstan-ignore varTag.nativeType
                     $record = $item->getRecord();
-                    $record = $record instanceof RecordInterface ? $record->getRawRecord()->toArray() : $record;
-                    return $record['hidden'] > 0;
+                    /** @var array<string, mixed> $recordFields */
+                    $recordFields = $record instanceof RecordInterface ? $record->getRawRecord()?->toArray() : $record;
+                    return $recordFields['hidden'] > 0;
                 }
             )
         );
