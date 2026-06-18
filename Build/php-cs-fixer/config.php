@@ -50,6 +50,9 @@ return (new \PhpCsFixer\Config())
                 'bin',
                 'Build',
                 'typo3temp',
+                'public',
+                'var',
+                'vendor',
             ])
     )
     ->setRiskyAllowed(true)

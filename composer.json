@@ -12,7 +12,7 @@
 		"docs": "https://ew-collapsible-container.evoweb.de/"
 	},
 	"config": {
-		"vendor-dir": "Build/vendor",
+		"cache-dir": ".cache/composer",
 		"bin-dir": "bin",
 		"allow-plugins": {
 			"typo3/class-alias-loader": true,
@@ -45,7 +45,7 @@
 		"typo3/cms": {
 			"extension-key": "ew_collapsible_container",
 			"app-dir": "Build",
-			"web-dir": "Build/Web",
+			"web-dir": "public",
 			"version": "2.4.0",
 			"Package": {
 				"providesPackages": {
@@ -63,7 +63,7 @@
 			"sed -i \"s/version' => '.*'/version' => '$(echo ${GITHUB_REF} | cut -d / -f 3)'/\" ext_emconf.php\n"
 		],
 		"post-install-cmd": [
-			"ln -sf vendor/typo3/testing-framework/Resources/Core/Build/ Build/phpunit;"
+			"ln -sf ../vendor/typo3/testing-framework/Resources/Core/Build/ Build/phpunit;"
 		],
 		"post-update-cmd": [
 			"@post-install-cmd"

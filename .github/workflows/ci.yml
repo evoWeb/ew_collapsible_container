@@ -19,14 +19,17 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Install
+        run: Build/Scripts/runTests.sh -s composerInstall
+
       - name: Run the xliff lint
-        run: Build/Scripts/additionalTests.sh -s lintXliff
+        run: Build/Scripts/runTests.sh -s checkIntegrityXliff
 
       - name: Test documentation build
-        run: Build/Scripts/additionalTests.sh -s buildDocumentation
+        run: Build/Scripts/runTests.sh -s checkRstRenderingSingle
 
       - name: Cleanup
-        run: Build/Scripts/additionalTests.sh -s clean
+        run: Build/Scripts/runTests.sh -s clean
 
   testsuite:
     name: All php tests
@@ -83,4 +86,3 @@ jobs:
       - name: Cleanup
         run: |
           Build/Scripts/runTests.sh -s clean
-          Build/Scripts/additionalTests.sh -s clean

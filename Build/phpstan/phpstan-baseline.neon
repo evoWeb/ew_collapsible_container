@@ -1,2 +1,13 @@
 parameters:
 	ignoreErrors:
+		-
+			message: '#^Instanceof between B13\\Container\\Events\\BeforeContainerPreviewIsRenderedEvent and B13\\Container\\Events\\BeforeContainerPreviewIsRenderedEvent will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 3
+			path: ../../Tests/Functional/EventListener/BeforeContainerPreviewIsRenderedListenerTest.php
+
+		-
+			message: '#^Call to an undefined method Evoweb\\EwCollapsibleContainer\\EventListener\\BeforeContainerPreviewIsRenderedListener\:\:processFor14\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: ../../Tests/Functional/EventListener/BeforeContainerPreviewIsRenderedListenerTest.php

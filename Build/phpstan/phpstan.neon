@@ -13,10 +13,3 @@ parameters:
   paths:
     - ../../Classes
     - ../../Tests
-
-  excludePaths:
-    analyseAndScan:
-      # ext_emconf.php get the $_EXTKEY set from outside. We'll ignore all of them
-      - ../../ext_emconf.php
-      # ignored to keep code aligned with the base class
-      - ../../Classes/Xclass/GridRenderer.php

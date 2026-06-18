@@ -24,7 +24,6 @@ install: ##@ Composer install
 cleanup: ##@ Cleanup
 	echo "Cleanup started"
 	Build/Scripts/runTests.sh -s clean
-	Build/Scripts/additionalTests.sh -s clean
 	echo "Cleanup finished";
 
 
@@ -43,9 +42,9 @@ phpstan: ##@ Run functional tests
 
 .PHONY: cgl
 cgl: ##@ Coding guideline check with
-	echo "Coding guideline check with phpstan started"
-	Build/Scripts//runTests.sh -p ${PHP_VERSION} -s cgl -n
-	echo "Coding guideline check with phpstan finished"
+	echo "Coding guideline check with php-cs-fixer started"
+	Build/Scripts/runTests.sh -p ${PHP_VERSION} -s cgl -n
+	echo "Coding guideline check with php-cs-fixer finished"
 
 
 help:
