@@ -46,7 +46,6 @@ def check_resources() -> None:
     run('./runTests.sh -s checkIntegrityXliff')
     run('./runTests.sh -s checkRstRenderingSingle')
     print(f'{GREEN}Resources valid{NC}')
-    cleanup()
 
 
 def run_functional_tests(php: str, core: str, framework: str, prefer: str = '') -> None:
@@ -56,7 +55,7 @@ def run_functional_tests(php: str, core: str, framework: str, prefer: str = '') 
     if prefer:
         print(f' Additional: {prefer}')
     print('###########################################################################')
-    cleanup()
+    run(f'./runTests.sh -p {php} -s cleanTests')
     run(f'./runTests.sh -p {php} -s lintPhp')
     run(f'./runTests.sh -p {php} -s composer -- require {prefer_arg} "typo3/cms-core:{core}"')
     run(f'./runTests.sh -p {php} -s composer -- require --dev {prefer_arg} "typo3/testing-framework:{framework}"')
@@ -73,7 +72,6 @@ def main() -> None:
         run_functional_tests('8.2', '^14.3', '^9.5.0', '--prefer-lowest')
     else:
         for php, prefer, pkg in matrix:
-            run(f'./runTests.sh -p {php} -s cleanTests')
             run_functional_tests(php, pkg['core'], pkg['framework'], prefer)
     cleanup()
 
