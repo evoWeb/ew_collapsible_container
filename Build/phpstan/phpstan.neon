@@ -3,7 +3,7 @@ includes:
 
 parameters:
   # Use local .cache dir instead of /tmp
-  tmpDir: ../.cache/phpstan
+  tmpDir: ../../.cache/phpstan
 
   level: 9
 
@@ -13,3 +13,5 @@ parameters:
   paths:
     - ../../Classes
     - ../../Tests
+
+  treatPhpDocTypesAsCertain: false
