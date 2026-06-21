@@ -43,8 +43,8 @@ def check_resources() -> None:
     run(f'./runTests.sh -p {php} -s composerInstall')
     run(f'./runTests.sh -p {php} -s phpstan')
     run(f'./runTests.sh -p {php} -s cgl -n')
-    run('./runTests.sh -s checkIntegrityXliff')
-    run('./runTests.sh -s checkRstRenderingSingle')
+    run(f'./runTests.sh -p {php} -s checkIntegrityXliff')
+    run(f'./runTests.sh -p {php} -s checkRstRenderingSingle')
     print(f'{GREEN}Resources valid{NC}')
 
 
