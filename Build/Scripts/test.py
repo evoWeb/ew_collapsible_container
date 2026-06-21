@@ -40,7 +40,7 @@ def check_resources() -> None:
     print('################################################################')
     print(' Checking documentation and xliff files')
     print('################################################################')
-    run('./runTests.sh -s composerInstall')
+    run(f'./runTests.sh -p {php} -s composerInstall')
     run(f'./runTests.sh -p {php} -s phpstan')
     run(f'./runTests.sh -p {php} -s cgl -n')
     run('./runTests.sh -s checkIntegrityXliff')
