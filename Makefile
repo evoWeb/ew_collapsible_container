@@ -27,6 +27,13 @@ cleanup: ##@ Cleanup
 	echo "Cleanup finished";
 
 
+.PHONY: cleanTests
+cleanTests: ##@ Clean test files but leave cache files
+	echo "cleanTests started"
+	Build/Scripts/runTests.sh -s cleanTests
+	echo "cleanTests finished";
+
+
 .PHONY: functional-test
 functional-test: ##@ Run functional tests
 	echo "Functional tests started"
