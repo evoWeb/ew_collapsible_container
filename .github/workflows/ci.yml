@@ -20,16 +20,22 @@ jobs:
           persist-credentials: false
 
       - name: Install
-        run: Build/Scripts/runTests.sh -s composerInstall
+        run: Build/Scripts/runTests.sh -b docker -s composerInstall
+
+      - name: Lint Yaml
+        run: Build/Scripts/runTests.sh -b docker -s lintYaml
+
+      - name: Lint Services Yaml
+        run: Build/Scripts/runTests.sh -b docker -s lintServicesYaml
 
       - name: Run the xliff lint
-        run: Build/Scripts/runTests.sh -s checkIntegrityXliff
+        run: Build/Scripts/runTests.sh -b docker -s checkIntegrityXliff
 
       - name: Test documentation build
-        run: Build/Scripts/runTests.sh -s checkRstRenderingSingle
+        run: Build/Scripts/runTests.sh -b docker -s checkRstRenderingSingle
 
       - name: Cleanup
-        run: Build/Scripts/runTests.sh -s clean
+        run: Build/Scripts/runTests.sh -b docker -s clean
 
   testsuite:
     name: All php tests
@@ -55,34 +61,39 @@ jobs:
       - name: Lint php
         run: |
           Build/Scripts/runTests.sh \
+            -b docker \
             -p ${{ matrix.php }} \
             -s lintPhp
 
       - name: Composer install core
         run: |
           Build/Scripts/runTests.sh \
+            -b docker \
             -p ${{ matrix.php }} \
             -s composer require ${{ matrix.prefer }} "typo3/cms-core:${{ matrix.packages.core }}"
 
       - name: Composer install framework
         run: |
           Build/Scripts/runTests.sh \
+            -b docker \
             -p ${{ matrix.php }} \
             -s composer require --dev ${{ matrix.prefer }} "typo3/testing-framework:${{ matrix.packages.framework }}"
 
       - name: Composer validate
         run: |
           Build/Scripts/runTests.sh \
+            -b docker \
             -p ${{ matrix.php }} \
             -s composerValidate
 
       - name: Functional tests with sqlite
         run: |
           Build/Scripts/runTests.sh \
+            -b docker \
             -p ${{ matrix.php }} \
             -d sqlite \
             -s functional Tests/Functional
 
       - name: Cleanup
         run: |
-          Build/Scripts/runTests.sh -s clean
+          Build/Scripts/runTests.sh -b docker -s clean
